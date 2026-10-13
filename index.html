@@ -243,7 +243,8 @@
   </footer>
 
   <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxS0ewK2_hiniA3lhKooPtL4tW2l1HVWUmdxjKsLjGZXW7UeB_59UWhHZPMW_Uqpl42/exec";
+    // 已更新為最新的 Apps Script 部署網址
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybHX-9St-uZIg-XQmR0JN187F7-kByreKpwuxKzeW5uTFQirchDyZZIWPkqyr2R6UXUQ/exec";
 
     const scaleSections = [
       {
@@ -355,10 +356,13 @@
           status: 'Screened_Out',
           S1: '0'
         };
+        // 1. 本機留存備份
         saveLocalResponse(payload);
-        sendDataToSheets(payload);
+        // 2. 秒切換排除畫面，絕不卡頓
         goToStep('step-screened');
         updateProgress(100);
+        // 3. 背景發送排除資料至 Google 試算表
+        sendDataToSheets(payload);
       } else {
         currentScaleIdx = 0;
         renderScaleSection();
@@ -459,9 +463,13 @@
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = new Date().toISOString();
 
+      // 1. 本機留存備份
       saveLocalResponse(surveyAnswers);
+
+      // 2. 穿透模式發送至 Google 試算表
       sendDataToSheets(surveyAnswers);
 
+      // 3. 0.8秒後顯示感謝頁
       setTimeout(() => {
         goToStep('step-thanks');
         updateProgress(100);
