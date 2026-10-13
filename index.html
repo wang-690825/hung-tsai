@@ -36,6 +36,7 @@
 
   <main class="max-w-3xl w-full mx-auto px-4 py-8 flex-grow">
 
+    <!-- 後台檢視面板 -->
     <div id="adminPanel" class="hidden mb-6 bg-slate-800 text-slate-100 rounded-xl p-5 text-sm space-y-4">
       <div class="flex justify-between items-center border-b border-slate-700 pb-2">
         <span class="font-bold text-teal-400">研究者管理端（本機緩存狀態）</span>
@@ -232,7 +233,7 @@
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </div>
       <h2 class="text-2xl font-bold text-slate-900">非常感謝您的參與</h2>
-      <p class="text-slate-600 max-w-md mx-auto leading-relaxed">由於本研究的研究對象鎖定具備金融商品投資經驗之個人投資者，問卷至此結束。再次感謝您的寶貴時間！</p>
+      <p class="text-slate-600 max-w-md mx-auto leading-relaxed">由於本研究之調查對象鎖定具備金融商品投資經驗之個人投資者，問卷至此結束。再次感謝您的寶貴時間！</p>
     </section>
 
   </main>
@@ -242,7 +243,6 @@
   </footer>
 
   <script>
-    // 已綁定您的最新 Apps Script 部署網址
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxS0ewK2_hiniA3lhKooPtL4tW2l1HVWUmdxjKsLjGZXW7UeB_59UWhHZPMW_Uqpl42/exec";
 
     const scaleSections = [
@@ -341,7 +341,7 @@
       updateProgress(15);
     }
 
-    async function handleS1Next() {
+    function handleS1Next() {
       const selected = document.querySelector('input[name="S1"]:checked');
       if (!selected) {
         alert('請選擇您是否具備投資經驗。');
@@ -356,7 +356,7 @@
           S1: '0'
         };
         saveLocalResponse(payload);
-        sendToGoogleSheets(payload);
+        sendDataToSheets(payload);
         goToStep('step-screened');
         updateProgress(100);
       } else {
@@ -454,32 +454,29 @@
 
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>資料傳送中...</span>';
+      submitBtn.innerHTML = '<span>問卷送出中...</span>';
 
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = new Date().toISOString();
 
-      // 先存本機備份
       saveLocalResponse(surveyAnswers);
+      sendDataToSheets(surveyAnswers);
 
-      // 非同步發送到 Google Sheets，設定 5 秒超時保護避免頁面卡死
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(surveyAnswers),
-          signal: controller.signal
-        });
-      } catch (err) {
-        console.warn("網路發送提示：已在背景處理或使用本機備份", err);
-      } finally {
-        clearTimeout(timeoutId);
+      setTimeout(() => {
         goToStep('step-thanks');
         updateProgress(100);
+      }, 800);
+    }
+
+    // 發送資料至 Google Apps Script（GET 模式，避開所有 CORS 與阻擋）
+    function sendDataToSheets(payload) {
+      try {
+        const params = new URLSearchParams(payload).toString();
+        const fullUrl = `${GOOGLE_SCRIPT_URL}?${params}`;
+        const beacon = new Image();
+        beacon.src = fullUrl;
+      } catch (e) {
+        console.error("發送失敗", e);
       }
     }
 
