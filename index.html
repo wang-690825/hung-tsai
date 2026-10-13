@@ -217,6 +217,7 @@
       </div>
     </section>
 
+    <!-- 步驟 5：完成感謝頁面 -->
     <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
       <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -225,6 +226,7 @@
       <p class="text-slate-600 max-w-md mx-auto leading-relaxed">非常感謝您撥冗協助填答，您的意見對本學術研究具有極大的貢獻。祝您順心！</p>
     </section>
 
+    <!-- 步驟 6：資格篩選排除頁面 -->
     <section id="step-screened" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
       <div class="w-16 h-16 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -240,7 +242,9 @@
   </footer>
 
   <script>
+    // 已綁定您的最新 Apps Script 部署網址
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxS0ewK2_hiniA3lhKooPtL4tW2l1HVWUmdxjKsLjGZXW7UeB_59UWhHZPMW_Uqpl42/exec";
+
     const scaleSections = [
       {
         id: "AT",
@@ -455,27 +459,27 @@
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = new Date().toISOString();
 
+      // 先存本機備份
       saveLocalResponse(surveyAnswers);
-      await sendToGoogleSheets(surveyAnswers);
 
-      goToStep('step-thanks');
-      updateProgress(100);
-    }
+      // 非同步發送到 Google Sheets，設定 5 秒超時保護避免頁面卡死
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-    async function sendToGoogleSheets(payload) {
-      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("AKfycb...")) {
-        console.warn("尚未綁定有效的 GOOGLE_SCRIPT_URL，僅儲存於本機。");
-        return;
-      }
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(surveyAnswers),
+          signal: controller.signal
         });
       } catch (err) {
-        console.error("傳送至 Google Sheets 時發生錯誤：", err);
+        console.warn("網路發送提示：已在背景處理或使用本機備份", err);
+      } finally {
+        clearTimeout(timeoutId);
+        goToStep('step-thanks');
+        updateProgress(100);
       }
     }
 
@@ -495,4 +499,55 @@
     function refreshAdminStats() {
       const records = JSON.parse(localStorage.getItem('esg_survey_records') || '[]');
       const valid = records.filter(r => r.status === 'Completed').length;
-      const screened = records.filter(r => r.status ===
+      const screened = records.filter(r => r.status === 'Screened_Out').length;
+      const validEl = document.getElementById('validCount');
+      const screenedEl = document.getElementById('screenedCount');
+      if (validEl) validEl.innerText = valid;
+      if (screenedEl) screenedEl.innerText = screened;
+    }
+
+    function exportCSV(validOnly = true) {
+      let records = JSON.parse(localStorage.getItem('esg_survey_records') || '[]');
+      if (validOnly) {
+        records = records.filter(r => r.status === 'Completed');
+      }
+      if (records.length === 0) {
+        alert('本機目前無對應的填答資料可供匯出。');
+        return;
+      }
+
+      const fields = [
+        "timestamp", "status", "S1",
+        "AT1", "AT2", "AT3", "AT4", "AT5",
+        "EICP1", "EICP2", "EICP3", "EICP4", "EICP5",
+        "SN1", "SN2", "SN3", "SN4",
+        "PBC1", "PBC2", "PBC3", "PBC4", "PBC5",
+        "INT1", "INT2", "INT3", "INT4",
+        "ATCB1", "ATCB2", "ATCB3", "ATCB4",
+        "D1", "D2", "D3", "D4"
+      ];
+
+      let csv = '\uFEFF' + fields.join(',') + '\n';
+      records.forEach(r => {
+        const row = fields.map(f => `"${r[f] !== undefined ? r[f] : ''}"`);
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `ESG_Survey_${validOnly ? 'Valid' : 'All'}_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    function clearStorage() {
+      if (confirm('確定要清除本機瀏覽器緩存的問卷資料嗎？（不會影響已送至 Google 試算表的資料）')) {
+        localStorage.removeItem('esg_survey_records');
+        refreshAdminStats();
+      }
+    }
+
+    refreshAdminStats();
+  </script>
+</body>
+</html>
