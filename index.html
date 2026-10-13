@@ -225,7 +225,8 @@
   </footer>
 
   <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRvKp2gH8nrOQ-LWV6s3ldCiPvdvlUHQk1egNJbguLUVrRC3BWY0KzStlwdHKhYgwN/exec";
+    // 已更新為您最新的 Apps Script 部署網址
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQFawClrD4EkkU_a9dfPONhyRYkd-nBfgB9XhKf0EQe782-_yxUPvzIxFcPeq8pHrzoA/exec";
 
     const scaleSections = [
       {
@@ -341,7 +342,6 @@
           status: 'Screened_Out',
           S1: '0'
         };
-        // 確實等候資料送達伺服器
         await sendDataToServer(payload);
         goToStep('step-screened');
         updateProgress(100);
@@ -445,14 +445,12 @@
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = new Date().toISOString();
 
-      // 真正等候資料送出完畢
       await sendDataToServer(surveyAnswers);
 
       goToStep('step-thanks');
       updateProgress(100);
     }
 
-    // 核心修復：使用 text/plain POST + no-cors，徹底繞過所有 CORS 阻擋並確保傳輸成功
     async function sendDataToServer(payload) {
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
