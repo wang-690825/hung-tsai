@@ -84,7 +84,7 @@
       </div>
       <div class="flex justify-between pt-6 border-t border-slate-100">
         <button onclick="goToStep('step-consent')" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
-        <button onclick="handleS1Next()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
+        <button id="s1NextBtn" onclick="handleS1Next()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
       </div>
     </section>
 
@@ -225,7 +225,6 @@
   </footer>
 
   <script>
-    // 您的真實 Apps Script 網址
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRvKp2gH8nrOQ-LWV6s3ldCiPvdvlUHQk1egNJbguLUVrRC3BWY0KzStlwdHKhYgwN/exec";
 
     const scaleSections = [
@@ -324,7 +323,7 @@
       updateProgress(15);
     }
 
-    function handleS1Next() {
+    async function handleS1Next() {
       const selected = document.querySelector('input[name="S1"]:checked');
       if (!selected) {
         alert('請選擇您是否具備投資經驗。');
@@ -333,16 +332,19 @@
       surveyAnswers['S1'] = selected.value;
 
       if (selected.value === '0') {
+        const nextBtn = document.getElementById('s1NextBtn');
+        nextBtn.disabled = true;
+        nextBtn.innerText = '處理中...';
+
         const payload = {
           timestamp: new Date().toISOString(),
           status: 'Screened_Out',
           S1: '0'
         };
-        // 1. 秒切換排除畫面，絕不卡頓
+        // 確實等候資料送達伺服器
+        await sendDataToServer(payload);
         goToStep('step-screened');
         updateProgress(100);
-        // 2. 背景靜默送出排除記錄至 Google 試算表
-        sendDataToSheets(payload);
       } else {
         currentScaleIdx = 0;
         renderScaleSection();
@@ -438,29 +440,32 @@
 
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>問卷送出中...</span>';
+      submitBtn.innerHTML = '<span>資料傳送中...</span>';
 
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = new Date().toISOString();
 
-      // 穿透發送至 Google 試算表
-      sendDataToSheets(surveyAnswers);
+      // 真正等候資料送出完畢
+      await sendDataToServer(surveyAnswers);
 
-      setTimeout(() => {
-        goToStep('step-thanks');
-        updateProgress(100);
-      }, 800);
+      goToStep('step-thanks');
+      updateProgress(100);
     }
 
-    // 利用 GET 穿透模式發送至 Google Apps Script（保證不被跨域阻擋）
-    function sendDataToSheets(payload) {
+    // 核心修復：使用 text/plain POST + no-cors，徹底繞過所有 CORS 阻擋並確保傳輸成功
+    async function sendDataToServer(payload) {
       try {
-        const params = new URLSearchParams(payload).toString();
-        const fullUrl = `${GOOGLE_SCRIPT_URL}?${params}`;
-        const beacon = new Image();
-        beacon.src = fullUrl;
-      } catch (e) {
-        console.error("發送失敗", e);
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("傳輸失敗：", err);
       }
     }
   </script>
