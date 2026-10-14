@@ -1,51 +1,721 @@
-function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
-    
-    // 取得現有第一列表頭
-    var lastCol = Math.max(sheet.getLastColumn(), 1);
-    var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-    
-    // 欄位對應字典（確保網頁送出的 serial 與 contact 正確對應）
-    var keyMapping = {
-      'timestamp': ['Timestamp', 'timestamp', '時間戳記'],
-      'status': ['Status', 'status', '狀態'],
-      'serial': ['Serial_No', 'serial', 'Serial', '序號', '流水號'],
-      'contact': ['Contact', 'contact', '聯絡方式', '電話信箱', 'D1']
-    };
-
-    var row = [];
-    for (var i = 0; i < headers.length; i++) {
-      var header = headers[i].toString().trim();
-      var val = "";
-      
-      if (data[header] !== undefined) {
-        val = data[header];
-      } else if (header === 'Serial_No' && data.serial !== undefined) {
-        val = data.serial;
-      } else if (header === 'Contact' && data.contact !== undefined) {
-        val = data.contact;
-      } else if (header === 'Contact' && data.D1 !== undefined && data.status === 'Reward_Registered') {
-        val = data.D1;
-      } else if (header === 'Status' && data.status !== undefined) {
-        val = data.status;
-      } else if (header === 'Timestamp' && data.timestamp !== undefined) {
-        val = data.timestamp;
-      }
-      row.push(val);
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESG 投資意圖調查問卷</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .scale-radio:checked + label {
+      border-color: #0d9488;
+      background-color: #f0fdfa;
+      color: #0f766e;
+      font-weight: 600;
     }
-    
-    sheet.appendRow(row);
-    
-    return ContentService.createTextOutput(JSON.stringify({"result": "success"}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({"result": "error", "error": err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between antialiased">
 
-function doGet(e) {
-  return ContentService.createTextOutput("ESG Survey Backend is Running.");
-}
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+        <h1 class="text-sm md:text-base font-bold text-slate-700 tracking-wide">學術研究調查｜ESG 投資意圖</h1>
+      </div>
+      <div>
+        <span class="text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full font-medium">匿名學術問卷</span>
+      </div>
+    </div>
+    <div class="w-full bg-slate-100 h-1.5 overflow-hidden">
+      <div id="progressBar" class="bg-teal-600 h-full transition-all duration-300 ease-out" style="width: 0%;"></div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl w-full mx-auto px-4 py-8 flex-grow">
+
+    <!-- 步驟 1：問卷說明及參與同意 -->
+    <section id="step-consent" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      
+      <div class="border-b border-slate-100 pb-4">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">問卷說明與受訪者同意書</h2>
+      </div>
+      <div class="text-slate-600 leading-relaxed text-sm md:text-base space-y-3">
+        <p>您好：</p>
+        <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
+      </div>
+
+      <!-- 認識 ESG 與 SDGs 17 項永續指標 -->
+      <div class="border-2 border-teal-200 bg-teal-50/40 rounded-2xl p-5 md:p-6 space-y-4">
+        <div class="flex items-center space-x-2 border-b border-teal-100 pb-2">
+          <span class="text-xl">💡</span>
+          <h3 class="text-lg md:text-xl font-bold text-teal-900">30 秒認識什麼是「ESG 投資」？</h3>
+        </div>
+        
+        <p class="text-sm md:text-base text-slate-700 leading-relaxed">
+          <strong>ESG</strong> 是評估企業「永續經營」與「社會責任」的三大核心維度，也是實踐聯合國 <strong>17 項永續發展目標（SDGs）</strong> 的關鍵標準：
+        </p>
+
+        <!-- SDGs 17項核心指標完整中文圖表 -->
+        <div class="rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm bg-white p-3">
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-white font-bold text-center">
+            
+            <div class="bg-[#E5243B] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">1</span>
+              <div class="my-auto text-xl">👨‍👩‍👧‍👦</div>
+              <span class="text-xs font-bold leading-tight">消除貧窮</span>
+            </div>
+
+            <div class="bg-[#DDA63A] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">2</span>
+              <div class="my-auto text-xl">🍲</div>
+              <span class="text-xs font-bold leading-tight">消除飢餓</span>
+            </div>
+
+            <div class="bg-[#4C9F38] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">3</span>
+              <div class="my-auto text-xl">📈❤️</div>
+              <span class="text-xs font-bold leading-tight">良好健康與福祉</span>
+            </div>
+
+            <div class="bg-[#C5192D] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">4</span>
+              <div class="my-auto text-xl">📖✏️</div>
+              <span class="text-xs font-bold leading-tight">優質教育</span>
+            </div>
+
+            <div class="bg-[#FF3A21] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">5</span>
+              <div class="my-auto text-xl">⚧️</div>
+              <span class="text-xs font-bold leading-tight">性別平等</span>
+            </div>
+
+            <div class="bg-[#26BDE2] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">6</span>
+              <div class="my-auto text-xl">🚰💧</div>
+              <span class="text-xs font-bold leading-tight">潔淨水與衛生</span>
+            </div>
+
+            <div class="bg-[#FCC30B] text-slate-900 p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">7</span>
+              <div class="my-auto text-xl">☀️⚡</div>
+              <span class="text-xs font-bold leading-tight">可負擔的潔淨能源</span>
+            </div>
+
+            <div class="bg-[#A21942] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">8</span>
+              <div class="my-auto text-xl">📊💼</div>
+              <span class="text-xs font-bold leading-tight">尊嚴就業與經濟發展</span>
+            </div>
+
+            <div class="bg-[#FD6925] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">9</span>
+              <div class="my-auto text-xl">🏗️💡</div>
+              <span class="text-xs font-bold leading-tight">產業創新與基礎建設</span>
+            </div>
+
+            <div class="bg-[#DD1367] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">10</span>
+              <div class="my-auto text-xl">⚖️</div>
+              <span class="text-xs font-bold leading-tight">減少不平等</span>
+            </div>
+
+            <div class="bg-[#FD9D24] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">11</span>
+              <div class="my-auto text-xl">🏙️🏘️</div>
+              <span class="text-xs font-bold leading-tight">永續城市與社區</span>
+            </div>
+
+            <div class="bg-[#BF8B2E] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">12</span>
+              <div class="my-auto text-xl">🔄📦</div>
+              <span class="text-xs font-bold leading-tight">負責任的消費與生產</span>
+            </div>
+
+            <div class="bg-[#3F7E44] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">13</span>
+              <div class="my-auto text-xl">🌍👁️</div>
+              <span class="text-xs font-bold leading-tight">氣候行動</span>
+            </div>
+
+            <div class="bg-[#0A97D9] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">14</span>
+              <div class="my-auto text-xl">🐟🌊</div>
+              <span class="text-xs font-bold leading-tight">水下生命</span>
+            </div>
+
+            <div class="bg-[#56C02B] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">15</span>
+              <div class="my-auto text-xl">🌳🦅</div>
+              <span class="text-xs font-bold leading-tight">陸域生命</span>
+            </div>
+
+            <div class="bg-[#00689D] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">16</span>
+              <div class="my-auto text-xl">🕊️⚖️</div>
+              <span class="text-xs font-bold leading-tight">和平正義與健全制度</span>
+            </div>
+
+            <div class="bg-[#19486A] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">17</span>
+              <div class="my-auto text-xl">🤝🌐</div>
+              <span class="text-xs font-bold leading-tight">多元夥伴關係</span>
+            </div>
+
+            <div class="bg-slate-50 text-slate-800 border-2 border-slate-300 p-2.5 rounded-lg flex flex-col items-center justify-center min-h-[90px]">
+              <span class="text-[11px] font-black tracking-tight text-teal-800">SUSTAINABLE</span>
+              <span class="text-[9px] font-bold text-slate-600">DEVELOPMENT</span>
+              <span class="text-xs font-black text-teal-700">GOALS</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-xs md:text-sm">
+          <div class="bg-white p-3.5 rounded-xl border border-teal-100 shadow-2xs space-y-1">
+            <span class="font-bold text-teal-700 block text-sm md:text-base">🌱 E（環境保護）</span>
+            <p class="text-slate-600">關注氣候行動、潔淨能源、節能減碳與生態保護（如目標 6, 7, 13, 14, 15）。</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-teal-100 shadow-2xs space-y-1">
+            <span class="font-bold text-teal-700 block text-sm md:text-base">🤝 S（社會責任）</span>
+            <p class="text-slate-600">關注員工健康福祉、性別平等、優質教育與人權保障（如目標 1, 3, 4, 5, 8, 10）。</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-teal-100 shadow-2xs space-y-1">
+            <span class="font-bold text-teal-700 block text-sm md:text-base">⚖️ G（公司治理）</span>
+            <p class="text-slate-600">關注誠信透明、董事會監督、反貪腐制度與合規營運（如目標 16, 17）。</p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-white/90 rounded-xl text-xs md:text-sm text-slate-700 border border-teal-100">
+          👉 <strong>什麼是 ESG 投資？</strong> 指投資人在做決策（如挑選股票、ESG ETF、永續基金）時，除了看財報賺不賺錢，亦將企業是否符合上述環境、社會與誠信治理納入投資考量。
+        </div>
+      </div>
+
+      <!-- 感謝禮填答說明 -->
+      <div class="p-4 md:p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 shadow-xs space-y-2">
+        <div class="text-lg md:text-xl font-bold text-amber-900 flex items-center gap-1.5">
+          <span>🎁</span> <span>感謝禮填答說明：</span>
+        </div>
+        <div class="text-sm md:text-base leading-relaxed text-amber-950">
+          為感謝您的協助，凡<strong>符合本研究對象資格並完整填答者</strong>，完成後可於頁面登記領取感謝禮。
+          <span class="bg-amber-300 text-amber-950 font-extrabold px-2 py-0.5 rounded-md inline-block my-1 border border-amber-400">
+            請保存截圖（含專屬流水號）
+          </span>
+          若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
+        </div>
+      </div>
+
+      <!-- 同意書勾選 -->
+      <div class="pt-4 border-t border-slate-100">
+        <label class="flex items-start space-x-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+          <input type="checkbox" id="consentCheckbox" class="mt-1 w-5 h-5 text-teal-600 rounded border-slate-300 focus:ring-teal-500">
+          <span class="text-sm md:text-base text-slate-700 leading-snug">
+            我已詳閱上述說明，理解填答權益與資料用途，並<strong>同意參與</strong>本次學術問卷調查。
+          </span>
+        </label>
+      </div>
+
+      <!-- 開始作答按鈕 -->
+      <div class="flex justify-end pt-2">
+        <button onclick="handleConsentNext()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition inline-flex items-center space-x-2">
+          <span>開始作答</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 步驟 2：S1 投資經驗篩選 -->
+    <section id="step-s1" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-100 pb-3">
+        <span class="text-xs font-semibold text-teal-600 tracking-wider uppercase">Screening Question</span>
+        <h2 class="text-xl font-bold text-slate-900 mt-1">第一部分：投資經驗篩選</h2>
+      </div>
+      <div class="space-y-4 pt-2">
+        <p class="text-base font-semibold text-slate-800">S1. 您是否曾有金融商品投資經驗？</p>
+        <div class="space-y-3">
+          <label class="flex items-center space-x-3 p-4 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/30 cursor-pointer transition">
+            <input type="radio" name="S1" value="1" class="w-4 h-4 text-teal-600 focus:ring-teal-500">
+            <span class="text-slate-800">是，曾有金融商品投資經驗</span>
+          </label>
+          <label class="flex items-center space-x-3 p-4 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/30 cursor-pointer transition">
+            <input type="radio" name="S1" value="0" class="w-4 h-4 text-teal-600 focus:ring-teal-500">
+            <span class="text-slate-800">否，沒有任何金融商品投資經驗</span>
+          </label>
+        </div>
+      </div>
+      <div class="flex justify-between pt-6 border-t border-slate-100">
+        <button onclick="goToStep('step-consent')" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
+        <button id="s1NextBtn" onclick="handleS1Next()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
+      </div>
+    </section>
+
+    <!-- 步驟 3：量表題 -->
+    <section id="step-scale" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-100 pb-3">
+        <h2 id="scaleTitle" class="text-xl font-bold text-slate-900 mt-1">構面標題</h2>
+        <p id="scaleDescription" class="text-sm text-slate-600 mt-2 bg-slate-50 p-3 rounded-lg border border-slate-100 leading-relaxed"></p>
+      </div>
+
+      <div id="scaleQuestionsContainer" class="space-y-8 pt-2"></div>
+
+      <div class="flex justify-between pt-6 border-t border-slate-100">
+        <button onclick="handleScalePrev()" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
+        <button onclick="handleScaleNext()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
+      </div>
+    </section>
+
+    <!-- 步驟 4：基本資料 -->
+    <section id="step-demographics" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-100 pb-3">
+        <h2 class="text-xl font-bold text-slate-900 mt-1">第八部分：基本資料</h2>
+      </div>
+
+      <div class="space-y-6 pt-2">
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D1. 性別 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D1" value="1" class="text-teal-600 focus:ring-teal-500"> <span>男</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D1" value="2" class="text-teal-600 focus:ring-teal-500"> <span>女</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D1" value="3" class="text-teal-600 focus:ring-teal-500"> <span>其他</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D1" value="4" class="text-teal-600 focus:ring-teal-500"> <span>不願回答</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D2. 年齡 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D2" value="1" class="text-teal-600 focus:ring-teal-500"> <span>20歲以下</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D2" value="2" class="text-teal-600 focus:ring-teal-500"> <span>21–30歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D2" value="3" class="text-teal-600 focus:ring-teal-500"> <span>31–40歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D2" value="4" class="text-teal-600 focus:ring-teal-500"> <span>41–50歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D2" value="5" class="text-teal-600 focus:ring-teal-500"> <span>51–60歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D2" value="6" class="text-teal-600 focus:ring-teal-500"> <span>61歲以上</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D3. 教育程度 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D3" value="1" class="text-teal-600 focus:ring-teal-500"> <span>高中職以下</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D3" value="2" class="text-teal-600 focus:ring-teal-500"> <span>專科或大學</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D3" value="3" class="text-teal-600 focus:ring-teal-500"> <span>碩士</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D3" value="4" class="text-teal-600 focus:ring-teal-500"> <span>博士</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D4. 投資年資 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D4" value="1" class="text-teal-600 focus:ring-teal-500"> <span>未滿1年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D4" value="2" class="text-teal-600 focus:ring-teal-500"> <span>1–3年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D4" value="3" class="text-teal-600 focus:ring-teal-500"> <span>4–6年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D4" value="4" class="text-teal-600 focus:ring-teal-500"> <span>7–10年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="D4" value="5" class="text-teal-600 focus:ring-teal-500"> <span>11年以上</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between pt-6 border-t border-slate-100">
+        <button onclick="handleDemographicsPrev()" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
+        <button id="submitBtn" onclick="submitSurvey()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-sm transition inline-flex items-center space-x-2">
+          <span>確認並送出問卷</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 步驟 5：完成感謝頁面（含專屬流水號與線上登記） -->
+    <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="text-center space-y-3">
+        <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成！</h2>
+        <p class="text-slate-600 text-sm max-w-md mx-auto">非常感謝您撥冗填答，您的寶貴意見對本學術研究具有重要貢獻。</p>
+      </div>
+
+      <!-- 領獎截圖憑證卡片 -->
+      <div class="bg-gradient-to-br from-teal-50 to-slate-50 border-2 border-teal-300 rounded-2xl p-5 md:p-6 text-center space-y-3 shadow-xs">
+        <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
+          受試者兌獎專用憑證
+        </span>
+        <h3 class="text-lg font-bold text-slate-800">✅ 資格符合暨完整填答證明</h3>
+        
+        <div class="bg-white border-2 border-teal-400 rounded-xl py-3 px-4 max-w-xs mx-auto shadow-xs">
+          <span class="text-xs text-slate-500 font-medium block">稽核認證流水號</span>
+          <span id="serialNumberText" class="text-2xl md:text-3xl font-black font-mono text-teal-700 tracking-wider"></span>
+        </div>
+
+        <p class="text-xs text-slate-500">完成時間：<span id="completeTimeText" class="font-mono font-medium text-slate-700"></span></p>
+        <p class="text-xs text-teal-800 font-medium pt-1">
+          📸 <strong>請截圖保存本畫面</strong>（含上方流水號），以利後續核對與領取感謝禮。
+        </p>
+      </div>
+
+      <!-- 登記抽獎/禮物輸入區 -->
+      <div id="rewardBox" class="bg-white border-2 border-slate-200 rounded-2xl p-5 md:p-6 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <h4 class="font-bold text-slate-800 text-base md:text-lg flex items-center space-x-2">
+            <span>🎁 填答感謝禮／抽獎資訊登記</span>
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">請留下您的聯絡方式（電話或 Email），以便後續發送禮物或中獎通知：</p>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">電話號碼 或 Email 信箱</label>
+            <input type="text" id="rewardContact" placeholder="例如：0912-345678 或 user@gmail.com" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none">
+          </div>
+          <button id="rewardSubmitBtn" onclick="submitRewardInfo()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl shadow-sm transition">
+            確認送出聯絡資訊
+          </button>
+        </div>
+      </div>
+      <div id="rewardSuccessMsg" class="hidden p-5 bg-teal-50 border-2 border-teal-300 rounded-2xl text-center text-sm font-bold text-teal-800 space-y-1">
+        <div>✅ 聯絡資訊登記成功！</div>
+        <div class="text-xs text-teal-700 font-normal">您的流水號資料已妥善儲存，感謝您的支持與配合！</div>
+      </div>
+    </section>
+
+    <!-- 步驟 6：資格篩選排除頁面 -->
+    <section id="step-screened" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
+      <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-900">非常感謝您的參與</h2>
+      <p class="text-slate-600 max-w-md mx-auto leading-relaxed text-sm md:text-base">
+        由於本研究之調查對象鎖定具備金融商品投資經驗之個人投資者，問卷至此結束。<br>
+        再次感謝您撥冗支持學術研究！
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="py-6 text-center text-xs text-slate-400">
+    © 學術研究調查專用問卷
+  </footer>
+
+  <script>
+    // 指定網頁應用程式 URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQFawClrD4EkkU_a9dfPONhyRYkd-nBfgB9XhKf0EQe782-_yxUPvzIxFcPeq8pHrzoA/exec";
+
+    // 依記事本進度（009），從 010 開始自動累加
+    function getNextSerialNumber() {
+      let currentSeq = parseInt(localStorage.getItem('esg_survey_serial') || '9', 10);
+      let nextSeq = currentSeq + 1;
+      localStorage.setItem('esg_survey_serial', nextSeq);
+      return 'ESG-' + String(nextSeq).padStart(3, '0');
+    }
+
+    const scaleSections = [
+      {
+        id: "AT",
+        title: "第二部分：ESG 投資態度（AT）",
+        desc: "填答說明：以下題項請依您對ESG投資的整體看法作答，無須考慮特定企業或投資商品。",
+        questions: [
+          { id: "AT1", text: "我認為進行ESG投資是一件好的事情。" },
+          { id: "AT2", text: "我認為進行ESG投資是有益的。" },
+          { id: "AT3", text: "我對ESG投資持正面的態度。" },
+          { id: "AT4", text: "我認為ESG投資是一項值得的投資選擇。" },
+          { id: "AT5", text: "整體而言，我認為進行ESG投資是令人滿意的。" }
+        ]
+      },
+      {
+        id: "EICP",
+        title: "第三部分：ESG 資訊可信度感知（EICP）",
+        desc: "填答說明：以下所稱「ESG 相關資訊」，係指企業、金融機構、基金公司、投資平台或其他公開來源所提供之環境、社會及公司治理相關資訊。請依您對上述 ESG 相關資訊的評估作答。",
+        questions: [
+          { id: "EICP1", text: "我認為這些 ESG 相關資訊所陳述的內容是正確的。" },
+          { id: "EICP2", text: "我認為這些 ESG 相關資訊的主張具有事實依據。" },
+          { id: "EICP3", text: "我認為這些 ESG 相關資訊能真誠地呈現資訊提供者對 ESG 議題的立場。" },
+          { id: "EICP4", text: "我認為這些 ESG 相關資訊的內容表達清楚，容易理解。" },
+          { id: "EICP5", text: "我認為這些 ESG 相關資訊的揭露內容與程度是適當的。" }
+        ]
+      },
+      {
+        id: "SN",
+        title: "第四部分：主觀規範（SN）",
+        desc: "填答說明：以下題項請依您認為重要他人對您進行ESG投資之看法作答。",
+        questions: [
+          { id: "SN1", text: "對我而言重要的人，認為我應該進行ESG投資。" },
+          { id: "SN2", text: "對我有影響力的人，認為我應該進行ESG投資。" },
+          { id: "SN3", text: "我的親友會支持我進行ESG投資。" },
+          { id: "SN4", text: "與我關係密切的人，會認同我進行ESG投資。" }
+        ]
+      },
+      {
+        id: "PBC",
+        title: "第五部分：知覺行為控制（PBC）",
+        desc: "填答說明：以下題項請依您對自己進行ESG投資之能力、條件與控制程度作答，無須與他人比較。",
+        questions: [
+          { id: "PBC1", text: "我具備進行ESG投資所需要的能力。" },
+          { id: "PBC2", text: "我有能力決定自己是否進行ESG投資。" },
+          { id: "PBC3", text: "對我而言，進行ESG投資是容易做到的。" },
+          { id: "PBC4", text: "我擁有進行ESG投資所需的資源。" },
+          { id: "PBC5", text: "我能夠控制自己是否進行ESG投資。" }
+        ]
+      },
+      {
+        id: "INT",
+        title: "第六部分：ESG 投資意圖（INT）",
+        desc: "填答說明：以下題項請依您未來進行ESG投資之意願與計畫作答。",
+        questions: [
+          { id: "INT1", text: "我願意進行ESG投資。" },
+          { id: "INT2", text: "未來我會考慮進行ESG投資。" },
+          { id: "INT3", text: "我打算進行ESG投資。" },
+          { id: "INT4", text: "我打算在未來增加對 ESG 投資的投入頻率。" }
+        ]
+      },
+      {
+        id: "ATCB",
+        title: "第七部分：一般顏色偏好（ATCB）",
+        desc: "填答說明：以下題項與ESG無關，請依您平常對顏色的喜好作答。",
+        questions: [
+          { id: "ATCB1", text: "藍色是一種可愛的顏色。" },
+          { id: "ATCB2", text: "藍色是一種令人愉快的顏色。" },
+          { id: "ATCB3", text: "藍色是一種不錯的顏色。" },
+          { id: "ATCB4", text: "我認為藍色是一種漂亮的顏色。" }
+        ]
+      }
+    ];
+
+    let currentScaleIdx = 0;
+    let surveyAnswers = {};
+    let currentAssignedSerial = '';
+
+    function updateProgress(percent) {
+      document.getElementById('progressBar').style.width = percent + '%';
+    }
+
+    function goToStep(stepId) {
+      ['step-consent', 'step-s1', 'step-scale', 'step-demographics', 'step-thanks', 'step-screened'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(stepId).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleConsentNext() {
+      if (!document.getElementById('consentCheckbox').checked) {
+        alert('請先閱讀並勾選同意參與本研究，方可開始填答。');
+        return;
+      }
+      goToStep('step-s1');
+      updateProgress(15);
+    }
+
+    async function handleS1Next() {
+      const selected = document.querySelector('input[name="S1"]:checked');
+      if (!selected) {
+        alert('請選擇您是否具備投資經驗。');
+        return;
+      }
+      surveyAnswers['S1'] = selected.value;
+
+      if (selected.value === '0') {
+        const nextBtn = document.getElementById('s1NextBtn');
+        nextBtn.disabled = true;
+        nextBtn.innerText = '處理中...';
+
+        const payload = {
+          timestamp: new Date().toISOString(),
+          status: 'Screened_Out',
+          S1: '0'
+        };
+        await sendDataToServer(payload);
+        goToStep('step-screened');
+        updateProgress(100);
+      } else {
+        currentScaleIdx = 0;
+        renderScaleSection();
+        goToStep('step-scale');
+      }
+    }
+
+    function renderScaleSection() {
+      const sec = scaleSections[currentScaleIdx];
+      document.getElementById('scaleTitle').innerText = sec.title;
+      document.getElementById('scaleDescription').innerText = sec.desc;
+      
+      const totalSteps = scaleSections.length + 3;
+      updateProgress(Math.round(((currentScaleIdx + 2) / totalSteps) * 100));
+
+      const container = document.getElementById('scaleQuestionsContainer');
+      container.innerHTML = '';
+
+      sec.questions.forEach(q => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'space-y-3 pb-6 border-b border-slate-100 last:border-b-0';
+        qDiv.innerHTML = `
+          <p class="font-medium text-slate-800 text-sm md:text-base">${q.id}. ${q.text}</p>
+          <div class="grid grid-cols-5 gap-2 text-center text-xs md:text-sm pt-1">
+            ${[
+              {val: 1, label: '非常不同意'},
+              {val: 2, label: '不同意'},
+              {val: 3, label: '普通'},
+              {val: 4, label: '同意'},
+              {val: 5, label: '非常同意'}
+            ].map(opt => `
+              <div class="relative">
+                <input type="radio" name="${q.id}" id="${q.id}_${opt.val}" value="${opt.val}" 
+                       class="sr-only scale-radio" ${surveyAnswers[q.id] == opt.val ? 'checked' : ''}>
+                <label for="${q.id}_${opt.val}" 
+                       class="flex flex-col items-center justify-center p-2.5 md:p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:border-teal-400 hover:bg-slate-50 transition h-full">
+                  <span class="text-base md:text-lg font-bold">${opt.val}</span>
+                  <span class="text-[10px] md:text-xs mt-1 text-slate-500 font-normal scale-label">${opt.label}</span>
+                </label>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(qDiv);
+      });
+    }
+
+    function handleScaleNext() {
+      const sec = scaleSections[currentScaleIdx];
+      for (let q of sec.questions) {
+        const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+        if (!selected) {
+          alert(`請填寫題目：${q.id}`);
+          return;
+        }
+        surveyAnswers[q.id] = selected.value;
+      }
+
+      if (currentScaleIdx < scaleSections.length - 1) {
+        currentScaleIdx++;
+        renderScaleSection();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        goToStep('step-demographics');
+        updateProgress(90);
+      }
+    }
+
+    function handleScalePrev() {
+      if (currentScaleIdx > 0) {
+        currentScaleIdx--;
+        renderScaleSection();
+      } else {
+        goToStep('step-s1');
+      }
+    }
+
+    function handleDemographicsPrev() {
+      currentScaleIdx = scaleSections.length - 1;
+      renderScaleSection();
+      goToStep('step-scale');
+    }
+
+    async function submitSurvey() {
+      for (let d of ['D1', 'D2', 'D3', 'D4']) {
+        const selected = document.querySelector(`input[name="${d}"]:checked`);
+        if (!selected) {
+          alert('基本資料各題皆為必填項目，請完成作答。');
+          return;
+        }
+        surveyAnswers[d] = selected.value;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>資料傳送中...</span>';
+
+      const now = new Date();
+      currentAssignedSerial = getNextSerialNumber(); // 自動生成序號 ESG-010, ESG-011...
+
+      surveyAnswers.status = 'Completed';
+      surveyAnswers.timestamp = now.toISOString();
+      surveyAnswers.serial = currentAssignedSerial;
+      surveyAnswers.Serial_No = currentAssignedSerial;
+
+      await sendDataToServer(surveyAnswers);
+
+      document.getElementById('serialNumberText').innerText = currentAssignedSerial;
+      document.getElementById('completeTimeText').innerText = now.toLocaleString('zh-TW');
+
+      goToStep('step-thanks');
+      updateProgress(100);
+    }
+
+    async function submitRewardInfo() {
+      const contactVal = document.getElementById('rewardContact').value.trim();
+      if (!contactVal) {
+        alert('請輸入您的聯絡電話或 Email 信箱！');
+        return;
+      }
+      const btn = document.getElementById('rewardSubmitBtn');
+      btn.disabled = true;
+      btn.innerText = '傳送中...';
+
+      // 獨立回傳感謝禮資料，帶有相同流水號
+      await sendDataToServer({
+        timestamp: new Date().toISOString(),
+        status: 'Reward_Registered',
+        serial: currentAssignedSerial,
+        Serial_No: currentAssignedSerial,
+        contact: contactVal,
+        Contact: contactVal,
+        D1: contactVal
+      });
+
+      document.getElementById('rewardBox').classList.add('hidden');
+      document.getElementById('rewardSuccessMsg').classList.remove('hidden');
+    }
+
+    async function sendDataToServer(payload) {
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("傳輸失敗：", err);
+      }
+    }
+  </script>
+</body>
+</html>
