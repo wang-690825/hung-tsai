@@ -265,7 +265,7 @@
       </div>
     </section>
 
-    <!-- 步驟 4：基本資料 -->
+    <!-- 步驟 4：基本資料（D1 已刪除「其他」選項） -->
     <section id="step-demographics" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="border-b border-slate-100 pb-3">
         <h2 class="text-xl font-bold text-slate-900 mt-1">第八部分：基本資料</h2>
@@ -274,7 +274,7 @@
       <div class="space-y-6 pt-2">
         <div class="space-y-2">
           <label class="block text-sm font-semibold text-slate-800">D1. 性別 <span class="text-red-500">*</span></label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="grid grid-cols-3 gap-3">
             <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
               <input type="radio" name="D1" value="1" class="text-teal-600 focus:ring-teal-500"> <span>男</span>
             </label>
@@ -282,10 +282,7 @@
               <input type="radio" name="D1" value="2" class="text-teal-600 focus:ring-teal-500"> <span>女</span>
             </label>
             <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D1" value="3" class="text-teal-600 focus:ring-teal-500"> <span>其他</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D1" value="4" class="text-teal-600 focus:ring-teal-500"> <span>不願回答</span>
+              <input type="radio" name="D1" value="3" class="text-teal-600 focus:ring-teal-500"> <span>不願回答</span>
             </label>
           </div>
         </div>
@@ -444,12 +441,17 @@
     // 最新部署第 3 版後端網址
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHWxUyAgBNf8taHpXJj6ZnMnv9StC3YJz7juwZKUGkFAHKriTHRpemSDjDBSUJkZFdmA/exec";
 
-    // 依記事本進度（009），從 010 開始自動累加
+    // 強制重設並從 10 開始累加
     function getNextSerialNumber() {
-      let currentSeq = parseInt(localStorage.getItem('esg_survey_serial') || '9', 10);
-      let nextSeq = currentSeq + 1;
-      localStorage.setItem('esg_survey_serial', nextSeq);
-      return 'ESG-' + String(nextSeq).padStart(3, '0');
+      let stored = localStorage.getItem('esg_survey_serial_v2');
+      let currentSeq;
+      if (!stored) {
+        currentSeq = 10;
+      } else {
+        currentSeq = parseInt(stored, 10) + 1;
+      }
+      localStorage.setItem('esg_survey_serial_v2', currentSeq);
+      return 'ESG-' + String(currentSeq).padStart(3, '0');
     }
 
     const scaleSections = [
@@ -663,7 +665,6 @@
         surveyAnswers[d] = selected.value;
       }
 
-      // 生成流水號並呈現於憑證上
       currentAssignedSerial = getNextSerialNumber();
       document.getElementById('serialNumberText').innerText = currentAssignedSerial;
       document.getElementById('completeTimeText').innerText = new Date().toLocaleString('zh-TW');
@@ -672,7 +673,6 @@
       updateProgress(100);
     }
 
-    // 將所有問卷內容 + 流水號 + 聯絡電話 整合成單一列送出
     async function finalizeAndSubmit(withContact) {
       const contactInput = document.getElementById('rewardContact').value.trim();
       
