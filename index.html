@@ -46,7 +46,7 @@
         <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
       </div>
 
-      <!-- 認識 ESG 與 SDGs 17 項永續指標 -->
+      <!-- 2. 認識 ESG 與 SDGs 17 項永續指標 -->
       <div class="border-2 border-teal-200 bg-teal-50/40 rounded-2xl p-5 md:p-6 space-y-4">
         <div class="flex items-center space-x-2 border-b border-teal-100 pb-2">
           <span class="text-xl">💡</span>
@@ -192,7 +192,7 @@
         </div>
       </div>
 
-      <!-- 感謝禮填答說明 -->
+      <!-- 3. 感謝禮填答說明 -->
       <div class="p-4 md:p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 shadow-xs space-y-2">
         <div class="text-lg md:text-xl font-bold text-amber-900 flex items-center gap-1.5">
           <span>🎁</span> <span>感謝禮填答說明：</span>
@@ -206,7 +206,7 @@
         </div>
       </div>
 
-      <!-- 同意書勾選 -->
+      <!-- 4. 同意書勾選 -->
       <div class="pt-4 border-t border-slate-100">
         <label class="flex items-start space-x-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
           <input type="checkbox" id="consentCheckbox" class="mt-1 w-5 h-5 text-teal-600 rounded border-slate-300 focus:ring-teal-500">
@@ -216,7 +216,7 @@
         </label>
       </div>
 
-      <!-- 開始作答按鈕 -->
+      <!-- 5. 開始作答按鈕 -->
       <div class="flex justify-end pt-2">
         <button onclick="handleConsentNext()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition inline-flex items-center space-x-2">
           <span>開始作答</span>
@@ -433,7 +433,6 @@
   </footer>
 
   <script>
-    // 指定網頁應用程式 URL
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQFawClrD4EkkU_a9dfPONhyRYkd-nBfgB9XhKf0EQe782-_yxUPvzIxFcPeq8pHrzoA/exec";
 
     // 依記事本進度（009），從 010 開始自動累加
@@ -660,11 +659,10 @@
       submitBtn.innerHTML = '<span>資料傳送中...</span>';
 
       const now = new Date();
-      currentAssignedSerial = getNextSerialNumber(); // 自動生成序號 ESG-010, ESG-011...
+      currentAssignedSerial = getNextSerialNumber();
 
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = now.toISOString();
-      surveyAnswers.serial = currentAssignedSerial;
       surveyAnswers.Serial_No = currentAssignedSerial;
 
       await sendDataToServer(surveyAnswers);
@@ -686,15 +684,12 @@
       btn.disabled = true;
       btn.innerText = '傳送中...';
 
-      // 獨立回傳感謝禮資料，帶有相同流水號
+      // 修正：電話只寫入 Contact，不再污染 D1
       await sendDataToServer({
         timestamp: new Date().toISOString(),
         status: 'Reward_Registered',
-        serial: currentAssignedSerial,
         Serial_No: currentAssignedSerial,
-        contact: contactVal,
-        Contact: contactVal,
-        D1: contactVal
+        Contact: contactVal
       });
 
       document.getElementById('rewardBox').classList.add('hidden');
