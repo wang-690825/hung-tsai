@@ -356,19 +356,20 @@
 
       <div class="flex justify-between pt-6 border-t border-slate-100">
         <button onclick="handleDemographicsPrev()" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
-        <button id="submitBtn" onclick="submitSurvey()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-sm transition inline-flex items-center space-x-2">
-          <span>確認並送出問卷</span>
+        <button onclick="proceedToThanksPage()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-sm transition inline-flex items-center space-x-2">
+          <span>填寫完畢，前往完成頁面</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
     </section>
 
-    <!-- 步驟 5：完成感謝頁面（含專屬流水號與線上登記） -->
+    <!-- 步驟 5：完成感謝頁面（一次性整合成單列送出） -->
     <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="text-center space-y-3">
         <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成！</h2>
+        <h2 class="text-2xl font-bold text-slate-900">問卷即將完成！</h2>
         <p class="text-slate-600 text-sm max-w-md mx-auto">非常感謝您撥冗填答，您的寶貴意見對本學術研究具有重要貢獻。</p>
       </div>
 
@@ -386,7 +387,7 @@
 
         <p class="text-xs text-slate-500">完成時間：<span id="completeTimeText" class="font-mono font-medium text-slate-700"></span></p>
         <p class="text-xs text-teal-800 font-medium pt-1">
-          📸 <strong>請截圖保存本畫面</strong>（含上方流水號），以利後續核對與領取感謝禮。
+          📸 <strong>請先截圖保存本畫面</strong>（含上方流水號），以利後續核對與領取感謝禮。
         </p>
       </div>
 
@@ -396,21 +397,28 @@
           <h4 class="font-bold text-slate-800 text-base md:text-lg flex items-center space-x-2">
             <span>🎁 填答感謝禮／抽獎資訊登記</span>
           </h4>
-          <p class="text-xs text-slate-500 mt-1">請留下您的聯絡方式（電話或 Email），以便後續發送禮物或中獎通知：</p>
+          <p class="text-xs text-slate-500 mt-1">請留下您的聯絡方式（電話或 Email），以便後續發送禮物或中獎通知（若不參與可直接留白）：</p>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">電話號碼 或 Email 信箱</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">電話號碼 或 Email 信箱（選填）</label>
             <input type="text" id="rewardContact" placeholder="例如：0912-345678 或 user@gmail.com" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none">
           </div>
-          <button id="rewardSubmitBtn" onclick="submitRewardInfo()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl shadow-sm transition">
-            確認送出聯絡資訊
-          </button>
+          
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button id="finalSubmitBtn" onclick="finalizeAndSubmit(true)" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl shadow-sm transition">
+              登記聯絡資訊並送出問卷
+            </button>
+            <button id="finalSkipBtn" onclick="finalizeAndSubmit(false)" class="py-3 px-5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold rounded-xl transition">
+              不登記，直接送出
+            </button>
+          </div>
         </div>
       </div>
+
       <div id="rewardSuccessMsg" class="hidden p-5 bg-teal-50 border-2 border-teal-300 rounded-2xl text-center text-sm font-bold text-teal-800 space-y-1">
-        <div>✅ 聯絡資訊登記成功！</div>
-        <div class="text-xs text-teal-700 font-normal">您的流水號資料已妥善儲存，感謝您的支持與配合！</div>
+        <div>🎉 問卷資料已成功送出！</div>
+        <div class="text-xs text-teal-700 font-normal">您的流水號與聯絡方式已妥善記錄，感謝您的支持與配合！</div>
       </div>
     </section>
 
@@ -433,7 +441,8 @@
   </footer>
 
   <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQFawClrD4EkkU_a9dfPONhyRYkd-nBfgB9XhKf0EQe782-_yxUPvzIxFcPeq8pHrzoA/exec";
+    // 最新部署第 3 版後端網址
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHWxUyAgBNf8taHpXJj6ZnMnv9StC3YJz7juwZKUGkFAHKriTHRpemSDjDBSUJkZFdmA/exec";
 
     // 依記事本進度（009），從 010 開始自動累加
     function getNextSerialNumber() {
@@ -644,7 +653,7 @@
       goToStep('step-scale');
     }
 
-    async function submitSurvey() {
+    function proceedToThanksPage() {
       for (let d of ['D1', 'D2', 'D3', 'D4']) {
         const selected = document.querySelector(`input[name="${d}"]:checked`);
         if (!selected) {
@@ -654,43 +663,36 @@
         surveyAnswers[d] = selected.value;
       }
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>資料傳送中...</span>';
-
-      const now = new Date();
+      // 生成流水號並呈現於憑證上
       currentAssignedSerial = getNextSerialNumber();
-
-      surveyAnswers.status = 'Completed';
-      surveyAnswers.timestamp = now.toISOString();
-      surveyAnswers.Serial_No = currentAssignedSerial;
-
-      await sendDataToServer(surveyAnswers);
-
       document.getElementById('serialNumberText').innerText = currentAssignedSerial;
-      document.getElementById('completeTimeText').innerText = now.toLocaleString('zh-TW');
+      document.getElementById('completeTimeText').innerText = new Date().toLocaleString('zh-TW');
 
       goToStep('step-thanks');
       updateProgress(100);
     }
 
-    async function submitRewardInfo() {
-      const contactVal = document.getElementById('rewardContact').value.trim();
-      if (!contactVal) {
-        alert('請輸入您的聯絡電話或 Email 信箱！');
+    // 將所有問卷內容 + 流水號 + 聯絡電話 整合成單一列送出
+    async function finalizeAndSubmit(withContact) {
+      const contactInput = document.getElementById('rewardContact').value.trim();
+      
+      if (withContact && !contactInput) {
+        alert('若要登記感謝禮，請輸入您的電話或信箱；若不登記請點選「不登記，直接送出」。');
         return;
       }
-      const btn = document.getElementById('rewardSubmitBtn');
-      btn.disabled = true;
-      btn.innerText = '傳送中...';
 
-      // 修正：電話只寫入 Contact，不再污染 D1
-      await sendDataToServer({
-        timestamp: new Date().toISOString(),
-        status: 'Reward_Registered',
-        Serial_No: currentAssignedSerial,
-        Contact: contactVal
-      });
+      const submitBtn = document.getElementById('finalSubmitBtn');
+      const skipBtn = document.getElementById('finalSkipBtn');
+      submitBtn.disabled = true;
+      skipBtn.disabled = true;
+      submitBtn.innerText = '資料傳送中...';
+
+      surveyAnswers.status = 'Completed';
+      surveyAnswers.timestamp = new Date().toISOString();
+      surveyAnswers.Serial_No = currentAssignedSerial;
+      surveyAnswers.Contact = withContact ? contactInput : '';
+
+      await sendDataToServer(surveyAnswers);
 
       document.getElementById('rewardBox').classList.add('hidden');
       document.getElementById('rewardSuccessMsg').classList.remove('hidden');
