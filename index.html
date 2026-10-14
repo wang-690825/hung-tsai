@@ -42,8 +42,10 @@
       </div>
       <div class="prose text-slate-600 leading-relaxed text-sm md:text-base space-y-4">
         <p>您好：</p>
-        <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。問卷沒有標準答案，請依實際看法作答，感謝您的協助。</p>
-        <p class="font-medium text-slate-700">本問卷採五點量表，各題請依您的實際情況選擇最符合的答案。</p>
+        <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
+        <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm">
+          <strong>🎁 感謝禮填答說明：</strong> 為感謝您的協助，凡<strong>符合本研究對象資格並完整填答</strong>者，完成後可於頁面登記領取感謝禮／參與抽獎。若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
+        </div>
       </div>
 
       <div class="mt-8 pt-6 border-t border-slate-100">
@@ -200,22 +202,59 @@
       </div>
     </section>
 
-    <!-- 步驟 5：完成感謝頁面 -->
-    <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
-      <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <!-- 步驟 5：完成感謝頁面（含領獎與截圖核對卡） -->
+    <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="text-center space-y-3">
+        <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成！</h2>
+        <p class="text-slate-600 text-sm max-w-md mx-auto">非常感謝您撥冗填答，您的寶貴意見對本學術研究具有重要貢獻。</p>
       </div>
-      <h2 class="text-2xl font-bold text-slate-900">問卷已填寫完成！</h2>
-      <p class="text-slate-600 max-w-md mx-auto leading-relaxed">非常感謝您撥冗協助填答，您的意見對本學術研究具有極大的貢獻。祝您順心！</p>
+
+      <!-- 領獎截圖憑證卡片（選否的人完全沒有這張卡） -->
+      <div class="bg-gradient-to-br from-teal-50 to-slate-50 border-2 border-teal-200 rounded-2xl p-5 md:p-6 text-center space-y-2">
+        <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
+          受試者兌獎專用憑證
+        </span>
+        <h3 class="text-lg font-bold text-slate-800">✅ 資格符合暨完整填答證明</h3>
+        <p class="text-xs text-slate-500">完成時間：<span id="completeTimeText" class="font-mono font-medium text-slate-700"></span></p>
+        <p class="text-xs text-teal-800 font-medium pt-1">如需出示填答證明，請直接截圖保留本畫面。</p>
+      </div>
+
+      <!-- 登記抽獎/禮物輸入區 -->
+      <div id="rewardBox" class="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
+        <div class="border-b border-slate-100 pb-2">
+          <h4 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
+            <span>🎁 填答感謝禮／抽獎資訊登記</span>
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">若您希望領取感謝禮或參與抽獎，請留下您的聯繫方式（選填）：</p>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">Email 或 手機號碼</label>
+            <input type="text" id="rewardContact" placeholder="例如：example@gmail.com 或 0912-345678" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none">
+          </div>
+          <button id="rewardSubmitBtn" onclick="submitRewardInfo()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
+            送出登記資訊
+          </button>
+        </div>
+      </div>
+      <div id="rewardSuccessMsg" class="hidden p-4 bg-teal-50 border border-teal-200 rounded-xl text-center text-sm font-medium text-teal-800">
+        ✅ 登記成功！感謝您的參與，祝您幸運中獎！
+      </div>
     </section>
 
-    <!-- 步驟 6：資格篩選排除頁面 -->
+    <!-- 步驟 6：資格篩選排除頁面（選「否」跳到此頁，完全沒有任何領獎介面） -->
     <section id="step-screened" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
-      <div class="w-16 h-16 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mx-auto">
+      <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </div>
       <h2 class="text-2xl font-bold text-slate-900">非常感謝您的參與</h2>
-      <p class="text-slate-600 max-w-md mx-auto leading-relaxed">由於本研究之調查對象鎖定具備金融商品投資經驗之個人投資者，問卷至此結束。再次感謝您的寶貴時間！</p>
+      <p class="text-slate-600 max-w-md mx-auto leading-relaxed text-sm md:text-base">
+        由於本研究之調查對象鎖定具備金融商品投資經驗之個人投資者，問卷至此結束。<br>
+        再次感謝您撥冗支持學術研究！
+      </p>
     </section>
 
   </main>
@@ -225,7 +264,6 @@
   </footer>
 
   <script>
-    // 已更新為您最新的 Apps Script 部署網址
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQFawClrD4EkkU_a9dfPONhyRYkd-nBfgB9XhKf0EQe782-_yxUPvzIxFcPeq8pHrzoA/exec";
 
     const scaleSections = [
@@ -442,13 +480,38 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>資料傳送中...</span>';
 
+      const now = new Date();
       surveyAnswers.status = 'Completed';
-      surveyAnswers.timestamp = new Date().toISOString();
+      surveyAnswers.timestamp = now.toISOString();
 
       await sendDataToServer(surveyAnswers);
 
+      // 設定完成感謝頁面的時間戳記
+      document.getElementById('completeTimeText').innerText = now.toLocaleString('zh-TW');
+
       goToStep('step-thanks');
       updateProgress(100);
+    }
+
+    async function submitRewardInfo() {
+      const contactVal = document.getElementById('rewardContact').value.trim();
+      if (!contactVal) {
+        alert('請輸入您的 Email 或手機號碼！');
+        return;
+      }
+      const btn = document.getElementById('rewardSubmitBtn');
+      btn.disabled = true;
+      btn.innerText = '傳送中...';
+
+      // 獨立回傳抽獎/聯絡資料
+      await sendDataToServer({
+        timestamp: new Date().toISOString(),
+        status: 'Reward_Registered',
+        D1: contactVal
+      });
+
+      document.getElementById('rewardBox').classList.add('hidden');
+      document.getElementById('rewardSuccessMsg').classList.remove('hidden');
     }
 
     async function sendDataToServer(payload) {
