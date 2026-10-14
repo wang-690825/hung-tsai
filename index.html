@@ -229,7 +229,7 @@
     <section id="step-s1" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="border-b border-slate-100 pb-3">
         <span class="text-xs font-semibold text-teal-600 tracking-wider uppercase">Screening Question</span>
-        <h2 class="text-xl font-bold text-slate-900 mt-1">第一部分：投資經驗篩解</h2>
+        <h2 class="text-xl font-bold text-slate-900 mt-1">第一部分：投資經驗篩選</h2>
       </div>
       <div class="space-y-4 pt-2">
         <p class="text-base font-semibold text-slate-800">S1. 您是否曾有金融商品投資經驗？</p>
@@ -438,19 +438,18 @@
   </footer>
 
   <script>
-    // 您的最新部署後端網址
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxstJZMIfhmoSOEYxp1ZseC1GQmCic4MRnbUulcwOJD7RGrl08deO0riwykdx6zodPaaQ/exec";
 
-    // 強制重設並從 10 開始累加
+    // 升級為 v3：強制重置計數器，精準從 10 開始累加
     function getNextSerialNumber() {
-      let stored = localStorage.getItem('esg_survey_serial_v2');
+      let stored = localStorage.getItem('esg_survey_serial_v3');
       let currentSeq;
       if (!stored) {
         currentSeq = 10;
       } else {
         currentSeq = parseInt(stored, 10) + 1;
       }
-      localStorage.setItem('esg_survey_serial_v2', currentSeq);
+      localStorage.setItem('esg_survey_serial_v3', currentSeq);
       return 'ESG-' + String(currentSeq).padStart(3, '0');
     }
 
