@@ -38,7 +38,6 @@
     <!-- 步驟 1：問卷說明及參與同意 -->
     <section id="step-consent" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       
-      <!-- 1. 問卷說明 -->
       <div class="border-b border-slate-100 pb-4">
         <h2 class="text-2xl font-bold text-slate-900 tracking-tight">問卷說明與受訪者同意書</h2>
       </div>
@@ -47,7 +46,7 @@
         <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
       </div>
 
-      <!-- 2. 認識 ESG 與 SDGs 17 項永續指標 -->
+      <!-- 2. 認識 ESG 與 SDGs 17 項永續指標（純中文完整代表圖示，永不破圖） -->
       <div class="border-2 border-teal-200 bg-teal-50/40 rounded-2xl p-5 md:p-6 space-y-4">
         <div class="flex items-center space-x-2 border-b border-teal-100 pb-2">
           <span class="text-xl">💡</span>
@@ -58,12 +57,119 @@
           <strong>ESG</strong> 是評估企業「永續經營」與「社會責任」的三大核心維度，也是實踐聯合國 <strong>17 項永續發展目標（SDGs）</strong> 的關鍵標準：
         </p>
 
-        <!-- 引用 sdgs.png 資料夾圖片，並具備自動備援路徑 -->
-        <div class="overflow-hidden rounded-xl border-2 border-slate-200 shadow-sm bg-white p-1">
-          <img src="sdgs.png/sdgs.png" 
-               onerror="this.onerror=null; this.src='sdgs.png/image.png'; this.onerror=function(){this.src='sdgs.png';};" 
-               alt="聯合國永續發展目標 SDGs 17項核心指標與代表圖示" 
-               class="w-full h-auto object-contain rounded-lg">
+        <!-- SDGs 17項核心指標完整中文圖表 -->
+        <div class="rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm bg-white p-3">
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-white font-bold text-center">
+            
+            <div class="bg-[#E5243B] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">1</span>
+              <div class="my-auto text-xl">👨‍👩‍👧‍👦</div>
+              <span class="text-xs font-bold leading-tight">消除貧窮</span>
+            </div>
+
+            <div class="bg-[#DDA63A] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">2</span>
+              <div class="my-auto text-xl">🍲</div>
+              <span class="text-xs font-bold leading-tight">消除飢餓</span>
+            </div>
+
+            <div class="bg-[#4C9F38] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">3</span>
+              <div class="my-auto text-xl">📈❤️</div>
+              <span class="text-xs font-bold leading-tight">良好健康與福祉</span>
+            </div>
+
+            <div class="bg-[#C5192D] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">4</span>
+              <div class="my-auto text-xl">📖✏️</div>
+              <span class="text-xs font-bold leading-tight">優質教育</span>
+            </div>
+
+            <div class="bg-[#FF3A21] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">5</span>
+              <div class="my-auto text-xl">⚧️</div>
+              <span class="text-xs font-bold leading-tight">性別平等</span>
+            </div>
+
+            <div class="bg-[#26BDE2] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">6</span>
+              <div class="my-auto text-xl">🚰💧</div>
+              <span class="text-xs font-bold leading-tight">潔淨水與衛生</span>
+            </div>
+
+            <div class="bg-[#FCC30B] text-slate-900 p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">7</span>
+              <div class="my-auto text-xl">☀️⚡</div>
+              <span class="text-xs font-bold leading-tight">可負擔的潔淨能源</span>
+            </div>
+
+            <div class="bg-[#A21942] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">8</span>
+              <div class="my-auto text-xl">📊💼</div>
+              <span class="text-xs font-bold leading-tight">尊嚴就業與經濟發展</span>
+            </div>
+
+            <div class="bg-[#FD6925] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">9</span>
+              <div class="my-auto text-xl">🏗️💡</div>
+              <span class="text-xs font-bold leading-tight">產業創新與基礎建設</span>
+            </div>
+
+            <div class="bg-[#DD1367] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">10</span>
+              <div class="my-auto text-xl">⚖️</div>
+              <span class="text-xs font-bold leading-tight">減少不平等</span>
+            </div>
+
+            <div class="bg-[#FD9D24] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">11</span>
+              <div class="my-auto text-xl">🏙️🏘️</div>
+              <span class="text-xs font-bold leading-tight">永續城市與社區</span>
+            </div>
+
+            <div class="bg-[#BF8B2E] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">12</span>
+              <div class="my-auto text-xl">🔄📦</div>
+              <span class="text-xs font-bold leading-tight">負責任的消費與生產</span>
+            </div>
+
+            <div class="bg-[#3F7E44] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">13</span>
+              <div class="my-auto text-xl">🌍👁️</div>
+              <span class="text-xs font-bold leading-tight">氣候行動</span>
+            </div>
+
+            <div class="bg-[#0A97D9] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">14</span>
+              <div class="my-auto text-xl">🐟🌊</div>
+              <span class="text-xs font-bold leading-tight">水下生命</span>
+            </div>
+
+            <div class="bg-[#56C02B] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">15</span>
+              <div class="my-auto text-xl">🌳🦅</div>
+              <span class="text-xs font-bold leading-tight">陸域生命</span>
+            </div>
+
+            <div class="bg-[#00689D] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">16</span>
+              <div class="my-auto text-xl">🕊️⚖️</div>
+              <span class="text-xs font-bold leading-tight">和平正義與健全制度</span>
+            </div>
+
+            <div class="bg-[#19486A] p-2.5 rounded-lg flex flex-col justify-between min-h-[90px] shadow-xs">
+              <span class="text-xs font-black text-left opacity-90">17</span>
+              <div class="my-auto text-xl">🤝🌐</div>
+              <span class="text-xs font-bold leading-tight">多元夥伴關係</span>
+            </div>
+
+            <div class="bg-slate-50 text-slate-800 border-2 border-slate-300 p-2.5 rounded-lg flex flex-col items-center justify-center min-h-[90px]">
+              <span class="text-[11px] font-black tracking-tight text-teal-800">SUSTAINABLE</span>
+              <span class="text-[9px] font-bold text-slate-600">DEVELOPMENT</span>
+              <span class="text-xs font-black text-teal-700">GOALS</span>
+            </div>
+
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-xs md:text-sm">
@@ -86,7 +192,7 @@
         </div>
       </div>
 
-      <!-- 3. 感謝禮填答說明（放置在後方，版面適中） -->
+      <!-- 3. 感謝禮填答說明 -->
       <div class="p-4 md:p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 shadow-xs space-y-2">
         <div class="text-lg md:text-xl font-bold text-amber-900 flex items-center gap-1.5">
           <span>🎁</span> <span>感謝禮填答說明：</span>
@@ -94,7 +200,7 @@
         <div class="text-sm md:text-base leading-relaxed text-amber-950">
           為感謝您的協助，凡<strong>符合本研究對象資格並完整填答者</strong>，完成後可於頁面登記領取感謝禮。
           <span class="bg-amber-300 text-amber-950 font-extrabold px-2 py-0.5 rounded-md inline-block my-1 border border-amber-400">
-            請保存截圖
+            請保存截圖（含專屬流水號）
           </span>
           若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
         </div>
@@ -256,7 +362,7 @@
       </div>
     </section>
 
-    <!-- 步驟 5：完成感謝頁面（含領獎與截圖核對卡） -->
+    <!-- 步驟 5：完成感謝頁面（含專屬流水號與線上登記） -->
     <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="text-center space-y-3">
         <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
@@ -266,36 +372,45 @@
         <p class="text-slate-600 text-sm max-w-md mx-auto">非常感謝您撥冗填答，您的寶貴意見對本學術研究具有重要貢獻。</p>
       </div>
 
-      <!-- 領獎截圖憑證卡片 -->
-      <div class="bg-gradient-to-br from-teal-50 to-slate-50 border-2 border-teal-200 rounded-2xl p-5 md:p-6 text-center space-y-2">
+      <!-- 領獎截圖憑證卡片（醒目標註專屬流水號） -->
+      <div class="bg-gradient-to-br from-teal-50 to-slate-50 border-2 border-teal-300 rounded-2xl p-5 md:p-6 text-center space-y-3 shadow-xs">
         <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
           受試者兌獎專用憑證
         </span>
         <h3 class="text-lg font-bold text-slate-800">✅ 資格符合暨完整填答證明</h3>
+        
+        <div class="bg-white border-2 border-teal-400 rounded-xl py-3 px-4 max-w-xs mx-auto shadow-xs">
+          <span class="text-xs text-slate-500 font-medium block">稽核認證流水號</span>
+          <span id="serialNumberText" class="text-2xl md:text-3xl font-black font-mono text-teal-700 tracking-wider"></span>
+        </div>
+
         <p class="text-xs text-slate-500">完成時間：<span id="completeTimeText" class="font-mono font-medium text-slate-700"></span></p>
-        <p class="text-xs text-teal-800 font-medium pt-1">如需出示填答證明，請直接截圖保留本畫面。</p>
+        <p class="text-xs text-teal-800 font-medium pt-1">
+          📸 <strong>請截圖保存本畫面</strong>（含上方流水號），以利後續核對與領取感謝禮。
+        </p>
       </div>
 
       <!-- 登記抽獎/禮物輸入區 -->
-      <div id="rewardBox" class="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
-        <div class="border-b border-slate-100 pb-2">
-          <h4 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
+      <div id="rewardBox" class="bg-white border-2 border-slate-200 rounded-2xl p-5 md:p-6 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <h4 class="font-bold text-slate-800 text-base md:text-lg flex items-center space-x-2">
             <span>🎁 填答感謝禮／抽獎資訊登記</span>
           </h4>
-          <p class="text-xs text-slate-500 mt-1">若您希望領取感謝禮或參與抽獎，請留下您的聯繫方式（選填）：</p>
+          <p class="text-xs text-slate-500 mt-1">請留下您的聯絡方式（電話或 Email），以便後續發送禮物或中獎通知：</p>
         </div>
         <div class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-slate-700 mb-1">Email 或 手機號碼</label>
-            <input type="text" id="rewardContact" placeholder="例如：example@gmail.com 或 0912-345678" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none">
+            <label class="block text-xs font-bold text-slate-700 mb-1">電話號碼 或 Email 信箱</label>
+            <input type="text" id="rewardContact" placeholder="例如：0912-345678 或 user@gmail.com" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none">
           </div>
-          <button id="rewardSubmitBtn" onclick="submitRewardInfo()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
-            送出登記資訊
+          <button id="rewardSubmitBtn" onclick="submitRewardInfo()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl shadow-sm transition">
+            確認送出聯絡資訊
           </button>
         </div>
       </div>
-      <div id="rewardSuccessMsg" class="hidden p-4 bg-teal-50 border border-teal-200 rounded-xl text-center text-sm font-medium text-teal-800">
-        ✅ 登記成功！感謝您的參與，祝您幸運中獎！
+      <div id="rewardSuccessMsg" class="hidden p-5 bg-teal-50 border-2 border-teal-300 rounded-2xl text-center text-sm font-bold text-teal-800 space-y-1">
+        <div>✅ 聯絡資訊登記成功！</div>
+        <div class="text-xs text-teal-700 font-normal">您的流水號資料已妥善儲存，感謝您的支持與配合！</div>
       </div>
     </section>
 
@@ -319,6 +434,14 @@
 
   <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQFawClrD4EkkU_a9dfPONhyRYkd-nBfgB9XhKf0EQe782-_yxUPvzIxFcPeq8pHrzoA/exec";
+
+    // 依您指定之起始點（記事本已到 009），從 010 開始自動累加
+    function getNextSerialNumber() {
+      let currentSeq = parseInt(localStorage.getItem('esg_survey_serial') || '9', 10);
+      let nextSeq = currentSeq + 1;
+      localStorage.setItem('esg_survey_serial', nextSeq);
+      return 'ESG-' + String(nextSeq).padStart(3, '0');
+    }
 
     const scaleSections = [
       {
@@ -394,6 +517,7 @@
 
     let currentScaleIdx = 0;
     let surveyAnswers = {};
+    let currentAssignedSerial = '';
 
     function updateProgress(percent) {
       document.getElementById('progressBar').style.width = percent + '%';
@@ -535,11 +659,15 @@
       submitBtn.innerHTML = '<span>資料傳送中...</span>';
 
       const now = new Date();
+      currentAssignedSerial = getNextSerialNumber(); // 生成下一組流水號（010, 011...）
+
       surveyAnswers.status = 'Completed';
       surveyAnswers.timestamp = now.toISOString();
+      surveyAnswers.serial = currentAssignedSerial;
 
       await sendDataToServer(surveyAnswers);
 
+      document.getElementById('serialNumberText').innerText = currentAssignedSerial;
       document.getElementById('completeTimeText').innerText = now.toLocaleString('zh-TW');
 
       goToStep('step-thanks');
@@ -549,16 +677,18 @@
     async function submitRewardInfo() {
       const contactVal = document.getElementById('rewardContact').value.trim();
       if (!contactVal) {
-        alert('請輸入您的 Email 或手機號碼！');
+        alert('請輸入您的聯絡電話或 Email 信箱！');
         return;
       }
       const btn = document.getElementById('rewardSubmitBtn');
       btn.disabled = true;
       btn.innerText = '傳送中...';
 
+      // 獨立回傳抽獎/聯絡資料，並附帶對應流水號
       await sendDataToServer({
         timestamp: new Date().toISOString(),
         status: 'Reward_Registered',
+        serial: currentAssignedSerial,
         D1: contactVal
       });
 
