@@ -43,8 +43,15 @@
       <div class="prose text-slate-600 leading-relaxed text-sm md:text-base space-y-4">
         <p>您好：</p>
         <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
-        <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm">
-          <strong>🎁 感謝禮填答說明：</strong> 為感謝您的協助，凡<strong>符合本研究對象資格並完整填答</strong>者，完成後可於頁面登記領取感謝禮／參與抽獎。若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
+        
+        <!-- 放大且醒目的感謝禮說明框 -->
+        <div class="p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 text-base md:text-lg leading-relaxed shadow-sm">
+          <p class="font-bold text-lg md:text-xl text-amber-900 mb-1 flex items-center gap-1.5">
+            <span>🎁</span> <span>感謝禮填答說明：</span>
+          </p>
+          <p>
+            為感謝您的協助，凡<strong>符合本研究對象資格並完整填答者</strong>，完成後可於頁面登記領取感謝禮。<span class="inline-block bg-amber-200 text-amber-900 font-extrabold px-2 py-0.5 rounded-md my-1">請保存截圖</span>。若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
+          </p>
         </div>
       </div>
 
@@ -212,7 +219,7 @@
         <p class="text-slate-600 text-sm max-w-md mx-auto">非常感謝您撥冗填答，您的寶貴意見對本學術研究具有重要貢獻。</p>
       </div>
 
-      <!-- 領獎截圖憑證卡片（選否的人完全沒有這張卡） -->
+      <!-- 領獎截圖憑證卡片 -->
       <div class="bg-gradient-to-br from-teal-50 to-slate-50 border-2 border-teal-200 rounded-2xl p-5 md:p-6 text-center space-y-2">
         <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full uppercase tracking-wider">
           受試者兌獎專用憑證
@@ -245,7 +252,7 @@
       </div>
     </section>
 
-    <!-- 步驟 6：資格篩選排除頁面（選「否」跳到此頁，完全沒有任何領獎介面） -->
+    <!-- 步驟 6：資格篩選排除頁面 -->
     <section id="step-screened" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
       <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -486,7 +493,6 @@
 
       await sendDataToServer(surveyAnswers);
 
-      // 設定完成感謝頁面的時間戳記
       document.getElementById('completeTimeText').innerText = now.toLocaleString('zh-TW');
 
       goToStep('step-thanks');
@@ -503,7 +509,6 @@
       btn.disabled = true;
       btn.innerText = '傳送中...';
 
-      // 獨立回傳抽獎/聯絡資料
       await sendDataToServer({
         timestamp: new Date().toISOString(),
         status: 'Reward_Registered',
