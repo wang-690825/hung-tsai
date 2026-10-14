@@ -40,22 +40,22 @@
       <div class="border-b border-slate-100 pb-4">
         <h2 class="text-2xl font-bold text-slate-900 tracking-tight">問卷說明與受訪者同意書</h2>
       </div>
-      <div class="prose text-slate-600 leading-relaxed text-sm md:text-base space-y-4">
+      <div class="text-slate-600 leading-relaxed text-base space-y-4">
         <p>您好：</p>
         <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
-        
-        <!-- 加一倍大特大字體版提示框 -->
-        <div class="my-6 p-6 md:p-8 bg-amber-50 border-4 border-amber-400 rounded-3xl text-amber-950 shadow-md">
-          <p class="font-extrabold text-2xl md:text-4xl text-amber-900 mb-4 flex items-center gap-2">
-            <span>🎁</span> <span>感謝禮填答說明：</span>
-          </p>
-          <p class="text-xl md:text-3xl font-bold leading-relaxed tracking-wide">
-            為感謝您的協助，凡<strong>符合本研究對象資格並完整填答者</strong>，完成後可於頁面登記領取感謝禮。
-            <span class="inline-block bg-amber-300 text-amber-950 font-black px-3 py-1 rounded-xl my-2 border-2 border-amber-400 shadow-sm">
-              請保存截圖
-            </span>
-            若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
-          </p>
+      </div>
+
+      <!-- 強制加一倍大（28px/32px）感謝禮提示框，使用 inline-style 確保 100% 生效 -->
+      <div style="background-color: #fffbeb !important; border: 4px solid #f59e0b !important; border-radius: 20px !important; padding: 24px !important; margin: 24px 0 !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;">
+        <div style="font-size: 32px !important; font-weight: 900 !important; color: #78350f !important; margin-bottom: 16px !important; display: flex; align-items: center; gap: 8px;">
+          <span>🎁</span> <span>感謝禮填答說明：</span>
+        </div>
+        <div style="font-size: 26px !important; line-height: 1.6 !important; font-weight: 700 !important; color: #451a03 !important;">
+          為感謝您的協助，凡<strong>符合本研究對象資格並完整填答者</strong>，完成後可於頁面登記領取感謝禮。
+          <span style="background-color: #fde047 !important; color: #000 !important; font-weight: 900 !important; padding: 4px 10px !important; border-radius: 8px !important; border: 2px solid #ca8a04 !important; display: inline-block; margin: 4px 0 !important;">
+            請保存截圖
+          </span>
+          若經篩選不符合受訪對象資格，系統將提早結束，不另行提供獎品，敬請見諒。
         </div>
       </div>
 
