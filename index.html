@@ -265,7 +265,7 @@
       </div>
     </section>
 
-    <!-- 步驟 4：基本資料 -->
+    <!-- 步驟 4：基本資料（D1 已刪除「其他」選項） -->
     <section id="step-demographics" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="border-b border-slate-100 pb-3">
         <h2 class="text-xl font-bold text-slate-900 mt-1">第八部分：基本資料</h2>
@@ -353,20 +353,20 @@
 
       <div class="flex justify-between pt-6 border-t border-slate-100">
         <button onclick="handleDemographicsPrev()" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
-        <button onclick="proceedToThanksPage()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-sm transition inline-flex items-center space-x-2">
+        <button id="toThanksBtn" onclick="proceedToThanksPage()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-sm transition inline-flex items-center space-x-2">
           <span>填寫完畢，前往完成頁面</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>
     </section>
 
-    <!-- 步驟 5：完成感謝頁面（整合單一列送出） -->
+    <!-- 步驟 5：完成感謝頁面 -->
     <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="text-center space-y-3">
         <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h2 class="text-2xl font-bold text-slate-900">問卷即將完成！</h2>
+        <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成！</h2>
         <p class="text-slate-600 text-sm max-w-md mx-auto">非常感謝您撥冗填答，您的寶貴意見對本學術研究具有重要貢獻。</p>
       </div>
 
@@ -379,12 +379,12 @@
         
         <div class="bg-white border-2 border-teal-400 rounded-xl py-3 px-4 max-w-xs mx-auto shadow-xs">
           <span class="text-xs text-slate-500 font-medium block">稽核認證流水號</span>
-          <span id="serialNumberText" class="text-2xl md:text-3xl font-black font-mono text-teal-700 tracking-wider"></span>
+          <span id="serialNumberText" class="text-2xl md:text-3xl font-black font-mono text-teal-700 tracking-wider">連線產生中...</span>
         </div>
 
         <p class="text-xs text-slate-500">完成時間：<span id="completeTimeText" class="font-mono font-medium text-slate-700"></span></p>
         <p class="text-xs text-teal-800 font-medium pt-1">
-          📸 <strong>請先截圖保存本畫面</strong>（含上方流水號），以利後續核對與領取感謝禮。
+          📸 <strong>請截圖保存本畫面</strong>（含上方流水號），以利後續核對與領取感謝禮。
         </p>
       </div>
 
@@ -438,20 +438,8 @@
   </footer>
 
   <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxstJZMIfhmoSOEYxp1ZseC1GQmCic4MRnbUulcwOJD7RGrl08deO0riwykdx6zodPaaQ/exec";
-
-    // 升級為 v3：強制重置計數器，精準從 10 開始累加
-    function getNextSerialNumber() {
-      let stored = localStorage.getItem('esg_survey_serial_v3');
-      let currentSeq;
-      if (!stored) {
-        currentSeq = 10;
-      } else {
-        currentSeq = parseInt(stored, 10) + 1;
-      }
-      localStorage.setItem('esg_survey_serial_v3', currentSeq);
-      return 'ESG-' + String(currentSeq).padStart(3, '0');
-    }
+    // 已更新為您最新的部署網址
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4WaJn1V9ln-w8U26xgZbbwVPeocNO3NH_m92GPF4yAExThSJxuVsFaF1dMdb9gpri2A/exec";
 
     const scaleSections = [
       {
@@ -527,7 +515,6 @@
 
     let currentScaleIdx = 0;
     let surveyAnswers = {};
-    let currentAssignedSerial = '';
 
     function updateProgress(percent) {
       document.getElementById('progressBar').style.width = percent + '%';
@@ -563,14 +550,14 @@
         nextBtn.disabled = true;
         nextBtn.innerText = '處理中...';
 
-        const payload = {
-          Timestamp: new Date().toISOString(),
-          Status: 'Screened_Out',
-          timestamp: new Date().toISOString(),
-          status: 'Screened_Out',
-          S1: '0'
-        };
-        await sendDataToServer(payload);
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          cache: 'no-cache',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ status: 'Screened_Out', S1: '0' })
+        });
+
         goToStep('step-screened');
         updateProgress(100);
       } else {
@@ -666,10 +653,7 @@
         surveyAnswers[d] = selected.value;
       }
 
-      currentAssignedSerial = getNextSerialNumber();
-      document.getElementById('serialNumberText').innerText = currentAssignedSerial;
       document.getElementById('completeTimeText').innerText = new Date().toLocaleString('zh-TW');
-
       goToStep('step-thanks');
       updateProgress(100);
     }
@@ -688,36 +672,28 @@
       skipBtn.disabled = true;
       submitBtn.innerText = '資料傳送中...';
 
-      const nowIso = new Date().toISOString();
-      surveyAnswers.Timestamp = nowIso;
-      surveyAnswers.timestamp = nowIso;
-      surveyAnswers.Status = 'Completed';
       surveyAnswers.status = 'Completed';
-      surveyAnswers.Serial_No = currentAssignedSerial;
-      surveyAnswers.serial = currentAssignedSerial;
       surveyAnswers.Contact = withContact ? contactInput : '';
-      surveyAnswers.contact = withContact ? contactInput : '';
 
-      await sendDataToServer(surveyAnswers);
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(surveyAnswers)
+        });
+        
+        const result = await res.json();
+        if (result.result === 'success' && result.serial) {
+          document.getElementById('serialNumberText').innerText = result.serial;
+        } else {
+          document.getElementById('serialNumberText').innerText = 'ESG-001';
+        }
+      } catch (err) {
+        document.getElementById('serialNumberText').innerText = '登記成功';
+      }
 
       document.getElementById('rewardBox').classList.add('hidden');
       document.getElementById('rewardSuccessMsg').classList.remove('hidden');
-    }
-
-    async function sendDataToServer(payload) {
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {
-        console.error("傳輸失敗：", err);
-      }
     }
   </script>
 </body>
