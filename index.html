@@ -43,10 +43,11 @@
       </div>
       <div class="text-slate-600 leading-relaxed text-sm md:text-base space-y-3">
         <p>您好：</p>
-        <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 3–4 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。</p>
+        <p>本問卷旨在瞭解個人投資者對 ESG 投資的看法與投資意圖，採匿名方式填答，資料僅供學術研究使用，預計約需 4–5 分鐘完成。參與完全出於自願，您可隨時停止填答，不會因此受到任何不利影響。問卷沒有標準答案，請依實際看法作答，感謝您的協助。</p>
+        <p class="text-teal-700 font-medium">本問卷採五點量表，各題請依您的實際情況選擇最符合的答案。</p>
       </div>
 
-      <!-- 2. 認識 ESG 與 SDGs 17 項永續指標 -->
+      <!-- 認識 ESG 與 SDGs 17 項永續指標 -->
       <div class="border-2 border-teal-200 bg-teal-50/40 rounded-2xl p-5 md:p-6 space-y-4">
         <div class="flex items-center space-x-2 border-b border-teal-100 pb-2">
           <span class="text-xl">💡</span>
@@ -211,18 +212,18 @@
       </div>
     </section>
 
-    <!-- 步驟 2：S1 投資經驗篩選 -->
+    <!-- 步驟 2：第一部分 投資經驗篩選 -->
     <section id="step-s1" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="border-b border-slate-100 pb-3">
         <span class="text-xs font-semibold text-teal-600 tracking-wider uppercase">Screening Question</span>
-        <h2 class="text-xl font-bold text-slate-900 mt-1">第一部分：投資經驗篩選</h2>
+        <h2 class="text-xl font-bold text-slate-900 mt-1">第一部分：投資經驗</h2>
       </div>
       <div class="space-y-4 pt-2">
         <p class="text-base font-semibold text-slate-800">S1. 您是否曾有金融商品投資經驗？</p>
         <div class="space-y-3">
           <label class="flex items-center space-x-3 p-4 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/30 cursor-pointer transition">
             <input type="radio" name="S1" value="1" class="w-4 h-4 text-teal-600 focus:ring-teal-500">
-            <span class="text-slate-800">是，曾有金融商品投資經驗</span>
+            <span class="text-slate-800">是，曾投資股票、基金、ETF 或其他金融商品（如債券、期貨、選擇權等）</span>
           </label>
           <label class="flex items-center space-x-3 p-4 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/30 cursor-pointer transition">
             <input type="radio" name="S1" value="0" class="w-4 h-4 text-teal-600 focus:ring-teal-500">
@@ -236,7 +237,104 @@
       </div>
     </section>
 
-    <!-- 步驟 3：量表題 -->
+    <!-- 步驟 3：第二部分 基本資料 -->
+    <section id="step-demographics" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-100 pb-3">
+        <span class="text-xs font-semibold text-teal-600 tracking-wider uppercase">Background Information</span>
+        <h2 class="text-xl font-bold text-slate-900 mt-1">第二部分：基本資料</h2>
+      </div>
+
+      <div class="space-y-6 pt-2">
+        <!-- D1. 投資年資 -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D1. 投資年資 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_tenure" value="1" class="text-teal-600 focus:ring-teal-500"> <span>未滿 1 年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_tenure" value="2" class="text-teal-600 focus:ring-teal-500"> <span>1–3 年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_tenure" value="3" class="text-teal-600 focus:ring-teal-500"> <span>4–6 年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_tenure" value="4" class="text-teal-600 focus:ring-teal-500"> <span>7–10 年</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_tenure" value="5" class="text-teal-600 focus:ring-teal-500"> <span>11 年以上</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- D2. 性別 -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D2. 性別 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_gender" value="1" class="text-teal-600 focus:ring-teal-500"> <span>男</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_gender" value="2" class="text-teal-600 focus:ring-teal-500"> <span>女</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_gender" value="3" class="text-teal-600 focus:ring-teal-500"> <span>不願回答</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- D3. 年齡 -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D3. 年齡 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_age" value="1" class="text-teal-600 focus:ring-teal-500"> <span>20 歲以下</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_age" value="2" class="text-teal-600 focus:ring-teal-500"> <span>21–30 歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_age" value="3" class="text-teal-600 focus:ring-teal-500"> <span>31–40 歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_age" value="4" class="text-teal-600 focus:ring-teal-500"> <span>41–50 歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_age" value="5" class="text-teal-600 focus:ring-teal-500"> <span>51–60 歲</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_age" value="6" class="text-teal-600 focus:ring-teal-500"> <span>61 歲以上</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- D4. 教育程度 -->
+        <div class="space-y-2">
+          <label class="block text-sm font-semibold text-slate-800">D4. 教育程度 <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_edu" value="1" class="text-teal-600 focus:ring-teal-500"> <span>高中職（含）以下</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_edu" value="2" class="text-teal-600 focus:ring-teal-500"> <span>專科或大學</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_edu" value="3" class="text-teal-600 focus:ring-teal-500"> <span>碩士</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+              <input type="radio" name="demo_edu" value="4" class="text-teal-600 focus:ring-teal-500"> <span>博士</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between pt-6 border-t border-slate-100">
+        <button onclick="goToStep('step-s1')" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
+        <button onclick="handleDemographicsNext()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
+      </div>
+    </section>
+
+    <!-- 步驟 4：量表題（第三部分～第八部分） -->
     <section id="step-scale" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
       <div class="border-b border-slate-100 pb-3">
         <h2 id="scaleTitle" class="text-xl font-bold text-slate-900 mt-1">構面標題</h2>
@@ -247,115 +345,20 @@
 
       <div class="flex justify-between pt-6 border-t border-slate-100">
         <button onclick="handleScalePrev()" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
-        <button onclick="handleScaleNext()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
+        <button id="scaleNextBtn" onclick="handleScaleNext()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl shadow-sm transition">下一步</button>
       </div>
     </section>
 
-    <!-- 步驟 4：基本資料 -->
-    <section id="step-demographics" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
-      <div class="border-b border-slate-100 pb-3">
-        <h2 class="text-xl font-bold text-slate-900 mt-1">第八部分：基本資料</h2>
-      </div>
-
-      <div class="space-y-6 pt-2">
-        <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-800">D1. 性別 <span class="text-red-500">*</span></label>
-          <div class="grid grid-cols-3 gap-3">
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D1" value="1" class="text-teal-600 focus:ring-teal-500"> <span>男</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D1" value="2" class="text-teal-600 focus:ring-teal-500"> <span>女</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D1" value="3" class="text-teal-600 focus:ring-teal-500"> <span>不願回答</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-800">D2. 年齡 <span class="text-red-500">*</span></label>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D2" value="1" class="text-teal-600 focus:ring-teal-500"> <span>20歲以下</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D2" value="2" class="text-teal-600 focus:ring-teal-500"> <span>21–30歲</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D2" value="3" class="text-teal-600 focus:ring-teal-500"> <span>31–40歲</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D2" value="4" class="text-teal-600 focus:ring-teal-500"> <span>41–50歲</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D2" value="5" class="text-teal-600 focus:ring-teal-500"> <span>51–60歲</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D2" value="6" class="text-teal-600 focus:ring-teal-500"> <span>61歲以上</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-800">D3. 教育程度 <span class="text-red-500">*</span></label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D3" value="1" class="text-teal-600 focus:ring-teal-500"> <span>高中職以下</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D3" value="2" class="text-teal-600 focus:ring-teal-500"> <span>專科或大學</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D3" value="3" class="text-teal-600 focus:ring-teal-500"> <span>碩士</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D3" value="4" class="text-teal-600 focus:ring-teal-500"> <span>博士</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-800">D4. 投資年資 <span class="text-red-500">*</span></label>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D4" value="1" class="text-teal-600 focus:ring-teal-500"> <span>未滿1年</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D4" value="2" class="text-teal-600 focus:ring-teal-500"> <span>1–3年</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D4" value="3" class="text-teal-600 focus:ring-teal-500"> <span>4–6年</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D4" value="4" class="text-teal-600 focus:ring-teal-500"> <span>7–10年</span>
-            </label>
-            <label class="flex items-center space-x-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
-              <input type="radio" name="D4" value="5" class="text-teal-600 focus:ring-teal-500"> <span>11年以上</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-between pt-6 border-t border-slate-100">
-        <button onclick="handleDemographicsPrev()" class="px-5 py-2.5 text-slate-600 hover:text-slate-900 font-medium rounded-xl transition">上一步</button>
-        <button id="finalSubmitBtn" onclick="finalizeAndSubmit()" class="px-7 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl shadow-sm transition inline-flex items-center space-x-2">
-          <span>完成作答，確認送出問卷</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-        </button>
-      </div>
-    </section>
-
-    <!-- 步驟 5：完成感謝頁面（純學術感謝，無贈禮資訊） -->
+    <!-- 步驟 5：完成感謝頁面（純學術感謝） -->
     <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-6">
       <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
       </div>
       
       <div class="space-y-2">
-        <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成，感謝您的支持！</h2>
+        <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成，感謝您的協助！</h2>
         <p class="text-slate-600 max-w-md mx-auto text-sm md:text-base leading-relaxed">
-          您的寶貴意見已成功記錄，對本學術研究具有重要貢獻。<br>
+          感謝您撥冗完成本問卷，您的回答將作為本研究分析之重要資料。<br>
           祝您投資順利、事事順心！
         </p>
       </div>
@@ -372,8 +375,8 @@
       </div>
       <h2 class="text-2xl font-bold text-slate-900">非常感謝您的參與</h2>
       <p class="text-slate-600 max-w-md mx-auto leading-relaxed text-sm md:text-base">
-        由於本研究之調查對象鎖定具備金融商品投資經驗之個人投資者，問卷至此結束。<br>
-        再次感謝您撥冗支持學術研究！
+        由於本研究之調查對象鎖定具備金融商品投資經驗之個人投資者，問卷到此結束。<br>
+        再次感謝您的協助！
       </p>
     </section>
 
@@ -397,70 +400,70 @@
       }
     }
 
+    // 最新完整量表構面（第三～第八部分）
     const scaleSections = [
       {
         id: "AT",
-        title: "第二部分：ESG 投資態度（AT）",
-        desc: "填答說明：以下題項請依您對ESG投資的整體看法作答，無須考慮特定企業或投資商品。",
+        title: "第三部分：ESG 投資看法",
+        desc: "填答說明：以下題項請依您對 ESG 投資的整體看法作答，無須考慮特定企業或投資商品。請選擇最符合您看法的程度（1＝非常不同意，5＝非常同意）。",
         questions: [
-          { id: "AT1", text: "我認為進行ESG投資是一件好的事情。" },
-          { id: "AT2", text: "我認為進行ESG投資是有益的。" },
-          { id: "AT3", text: "我對ESG投資持正面的態度。" },
-          { id: "AT4", text: "我認為ESG投資是一項值得的投資選擇。" },
-          { id: "AT5", text: "整體而言，我認為進行ESG投資是令人滿意的。" }
+          { id: "AT1", text: "我認為進行 ESG 投資是一件好的事情。" },
+          { id: "AT2", text: "我認為進行 ESG 投資是有益的。" },
+          { id: "AT3", text: "我對 ESG 投資持正面的態度。" },
+          { id: "AT4", text: "我認為 ESG 投資是一項值得的投資選擇。" },
+          { id: "AT5", text: "整體而言，我認為進行 ESG 投資是令人滿意的。" }
+        ]
+      },
+      {
+        id: "SN",
+        title: "第四部分：他人看法與支持",
+        desc: "填答說明：以下題項請依您認為重要他人對您進行 ESG 投資之看法作答。請選擇最符合您看法的程度（1＝非常不同意，5＝非常同意）。",
+        questions: [
+          { id: "SN1", text: "對我而言重要的人，認為我應該進行 ESG 投資。" },
+          { id: "SN2", text: "對我有影響力的人，認為我應該進行 ESG 投資。" },
+          { id: "SN3", text: "我的親友會支持我進行 ESG 投資。" },
+          { id: "SN4", text: "與我關係密切的人，會認同我進行 ESG 投資。" }
+        ]
+      },
+      {
+        id: "PBC",
+        title: "第五部分：個人投資能力與條件",
+        desc: "填答說明：以下題項請依您對自己進行 ESG 投資之能力、條件與控制程度作答，無須與他人比較。請選擇最符合您看法的程度（1＝非常不同意，5＝非常同意）。",
+        questions: [
+          { id: "PBC1", text: "我具備進行 ESG 投資所需要的能力。" },
+          { id: "PBC2", text: "我有能力決定自己是否進行 ESG 投資。" },
+          { id: "PBC3", text: "對我而言，進行 ESG 投資是容易做到的。" },
+          { id: "PBC4", text: "我擁有進行 ESG 投資所需的資源。" },
+          { id: "PBC5", text: "我能夠控制自己是否進行 ESG 投資。" }
         ]
       },
       {
         id: "EICP",
-        title: "第三部分：ESG 資訊可信度感知（EICP）",
-        desc: "填答說明：以下所稱「ESG 相關資訊」，係指企業、金融機構、基金公司、投資平台或其他公開來源所提供之環境、社會及公司治理相關資訊。請依您對上述 ESG 相關資訊的評估作答。",
+        title: "第六部分：ESG 資訊看法",
+        desc: "填答說明：以下所稱「ESG 相關資訊」，係指您平常最常接觸到的 ESG 投資相關資訊（例如：基金平台或券商 App 上的 ESG 標章／評分、新聞媒體報導、企業永續報告書、投資平台的 ESG 說明等）。請您回想這些您實際看過的資訊，依您對它們的整體感受作答。請選擇最符合您看法的程度（1＝非常不同意，5＝非常同意）。",
         questions: [
           { id: "EICP1", text: "我認為這些 ESG 相關資訊所陳述的內容是正確的。" },
           { id: "EICP2", text: "我認為這些 ESG 相關資訊的主張具有事實依據。" },
-          { id: "EICP3", text: "我認為這些 ESG 相關資訊能真誠地呈現資訊提供者對 ESG 議題的立場。" },
+          { id: "EICP3", text: "我認為這些 ESG 相關資訊沒有刻意美化或隱瞞重要內容。" },
           { id: "EICP4", text: "我認為這些 ESG 相關資訊的內容表達清楚，容易理解。" },
           { id: "EICP5", text: "我認為這些 ESG 相關資訊的揭露內容與程度是適當的。" }
         ]
       },
       {
-        id: "SN",
-        title: "第四部分：主觀規範（SN）",
-        desc: "填答說明：以下題項請依您認為重要他人對您進行ESG投資之看法作答。",
-        questions: [
-          { id: "SN1", text: "對我而言重要的人，認為我應該進行ESG投資。" },
-          { id: "SN2", text: "對我有影響力的人，認為我應該進行ESG投資。" },
-          { id: "SN3", text: "我的親友會支持我進行ESG投資。" },
-          { id: "SN4", text: "與我關係密切的人，會認同我進行ESG投資。" }
-        ]
-      },
-      {
-        // 依學長建議：標題與敘述調整為較保守穩健的「投資能力與條件評估」，避免直白呈現心理學學術詞彙
-        id: "PBC",
-        title: "第五部分：投資能力與條件評估",
-        desc: "填答說明：以下題項請依您個人進行ESG投資之能力、條件與掌握程度作答，無須與他人比較。",
-        questions: [
-          { id: "PBC1", text: "我具備進行ESG投資所需要的能力。" },
-          { id: "PBC2", text: "我有能力決定自己是否進行ESG投資。" },
-          { id: "PBC3", text: "對我而言，進行ESG投資是容易做到的。" },
-          { id: "PBC4", text: "我擁有進行ESG投資所需的資源。" },
-          { id: "PBC5", text: "我能夠控制自己是否進行ESG投資。" }
-        ]
-      },
-      {
         id: "INT",
-        title: "第六部分：ESG 投資意圖（INT）",
-        desc: "填答說明：以下題項請依您未來進行ESG投資之意願與計畫作答。",
+        title: "第七部分：未來投資考量",
+        desc: "填答說明：以下題項請依您未來進行 ESG 投資之意願與計畫作答。請選擇最符合您看法的程度（1＝非常不同意，5＝非常同意）。",
         questions: [
-          { id: "INT1", text: "我願意進行ESG投資。" },
-          { id: "INT2", text: "未來我會考慮進行ESG投資。" },
-          { id: "INT3", text: "我打算進行ESG投資。" },
+          { id: "INT1", text: "我願意進行 ESG 投資。" },
+          { id: "INT2", text: "未來我會考慮進行 ESG 投資。" },
+          { id: "INT3", text: "我打算進行 ESG 投資。" },
           { id: "INT4", text: "我打算在未來增加對 ESG 投資的投入頻率。" }
         ]
       },
       {
         id: "ATCB",
-        title: "第七部分：一般顏色偏好（ATCB）",
-        desc: "填答說明：以下題項與ESG無關，請依您平常對顏色的喜好作答。",
+        title: "第八部分：日常偏好小調查",
+        desc: "填答說明：以下題項與前面投資題目無關，請依您平常對顏色的喜好作答。請選擇最符合您看法的程度（1＝非常不同意，5＝非常同意）。",
         questions: [
           { id: "ATCB1", text: "藍色是一種可愛的顏色。" },
           { id: "ATCB2", text: "藍色是一種令人愉快的顏色。" },
@@ -478,7 +481,7 @@
     }
 
     function goToStep(stepId) {
-      ['step-consent', 'step-s1', 'step-scale', 'step-demographics', 'step-thanks', 'step-screened'].forEach(id => {
+      ['step-consent', 'step-s1', 'step-demographics', 'step-scale', 'step-thanks', 'step-screened'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
       document.getElementById(stepId).classList.remove('hidden');
@@ -491,7 +494,7 @@
         return;
       }
       goToStep('step-s1');
-      updateProgress(15);
+      updateProgress(12);
     }
 
     async function handleS1Next() {
@@ -519,10 +522,31 @@
         goToStep('step-screened');
         updateProgress(100);
       } else {
-        currentScaleIdx = 0;
-        renderScaleSection();
-        goToStep('step-scale');
+        goToStep('step-demographics');
+        updateProgress(24);
       }
+    }
+
+    function handleDemographicsNext() {
+      const tenure = document.querySelector('input[name="demo_tenure"]:checked');
+      const gender = document.querySelector('input[name="demo_gender"]:checked');
+      const age = document.querySelector('input[name="demo_age"]:checked');
+      const edu = document.querySelector('input[name="demo_edu"]:checked');
+
+      if (!tenure || !gender || !age || !edu) {
+        alert('基本資料各題皆為必填項目，請完成作答。');
+        return;
+      }
+
+      // 嚴格對齊後端試算表原有欄位 (D1=性別, D2=年齡, D3=教育程度, D4=投資年資)
+      surveyAnswers['D1'] = gender.value;
+      surveyAnswers['D2'] = age.value;
+      surveyAnswers['D3'] = edu.value;
+      surveyAnswers['D4'] = tenure.value;
+
+      currentScaleIdx = 0;
+      renderScaleSection();
+      goToStep('step-scale');
     }
 
     function renderScaleSection() {
@@ -531,7 +555,14 @@
       document.getElementById('scaleDescription').innerText = sec.desc;
       
       const totalSteps = scaleSections.length + 3;
-      updateProgress(Math.round(((currentScaleIdx + 2) / totalSteps) * 100));
+      updateProgress(Math.round(((currentScaleIdx + 3) / totalSteps) * 100));
+
+      const nextBtn = document.getElementById('scaleNextBtn');
+      if (currentScaleIdx === scaleSections.length - 1) {
+        nextBtn.innerText = "完成作答，確認送出問卷";
+      } else {
+        nextBtn.innerText = "下一步";
+      }
 
       const container = document.getElementById('scaleQuestionsContainer');
       container.innerHTML = '';
@@ -565,7 +596,7 @@
       });
     }
 
-    function handleScaleNext() {
+    async function handleScaleNext() {
       const sec = scaleSections[currentScaleIdx];
       for (let q of sec.questions) {
         const selected = document.querySelector(`input[name="${q.id}"]:checked`);
@@ -581,8 +612,8 @@
         renderScaleSection();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        goToStep('step-demographics');
-        updateProgress(90);
+        // 最後一個區塊填寫完畢，正式送出
+        await finalizeAndSubmit();
       }
     }
 
@@ -591,34 +622,19 @@
         currentScaleIdx--;
         renderScaleSection();
       } else {
-        goToStep('step-s1');
+        goToStep('step-demographics');
       }
-    }
-
-    function handleDemographicsPrev() {
-      currentScaleIdx = scaleSections.length - 1;
-      renderScaleSection();
-      goToStep('step-scale');
     }
 
     async function finalizeAndSubmit() {
-      for (let d of ['D1', 'D2', 'D3', 'D4']) {
-        const selected = document.querySelector(`input[name="${d}"]:checked`);
-        if (!selected) {
-          alert('基本資料各題皆為必填項目，請完成作答。');
-          return;
-        }
-        surveyAnswers[d] = selected.value;
-      }
-
-      const submitBtn = document.getElementById('finalSubmitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = '資料傳送中...';
+      const nextBtn = document.getElementById('scaleNextBtn');
+      nextBtn.disabled = true;
+      nextBtn.innerText = '資料傳送中...';
 
       surveyAnswers.status = 'Completed';
-      surveyAnswers.Contact = ''; // 無贈禮，欄位留空
+      surveyAnswers.Contact = '';
 
-      // 取得填答者真實外部 IP
+      // 取得真實外部 IP
       surveyAnswers.IP = await getClientIP();
 
       try {
