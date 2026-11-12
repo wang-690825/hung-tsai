@@ -193,12 +193,28 @@
         </div>
       </div>
 
+      <!-- 有效問卷禮物與防洗刷嚴格說明 -->
+      <div class="p-4 md:p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-950 shadow-xs space-y-2.5">
+        <div class="text-lg md:text-xl font-bold text-amber-900 flex items-center gap-1.5">
+          <span>🎁</span> <span>感謝禮發送與「有效問卷」審核說明：</span>
+        </div>
+        <div class="text-sm md:text-base leading-relaxed text-amber-950 space-y-2">
+          <p>
+            為感謝您的協助，凡<strong>符合研究對象資格且認真完整填答</strong>者，完成後可自願留下 <strong>Email 信箱</strong>，以便後續聯絡與發送感謝禮（不參與者亦可直接略過送出）。
+          </p>
+          <div class="bg-white/80 border border-amber-300 rounded-xl p-3 text-xs md:text-sm text-red-900 space-y-1">
+            <p class="font-bold">⚠️ 嚴格防洗問卷檢核機制（請務必留意）：</p>
+            <p>本問卷設有系統邏輯與一致性檢核。<strong>僅限「有效問卷」具備發送／抽獎資格</strong>，若經檢測發現有<strong>「全選同一選項（直線性填答）」、「題意明顯矛盾」、「重複 IP 灌水」或「重複留下相同信箱」</strong>等無效洗單行為，系統將直接剔除並取消資格，不另行通知。</p>
+          </div>
+        </div>
+      </div>
+
       <!-- 同意書勾選 -->
       <div class="pt-4 border-t border-slate-100">
         <label class="flex items-start space-x-3 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
           <input type="checkbox" id="consentCheckbox" class="mt-1 w-5 h-5 text-teal-600 rounded border-slate-300 focus:ring-teal-500">
           <span class="text-sm md:text-base text-slate-700 leading-snug">
-            我已詳閱上述說明，理解填答權益與資料用途，並<strong>同意參與</strong>本次學術問卷調查。
+            我已詳閱上述說明與有效問卷審核規範，並<strong>同意參與</strong>本次學術問卷調查。
           </span>
         </label>
       </div>
@@ -349,22 +365,46 @@
       </div>
     </section>
 
-    <!-- 步驟 5：完成感謝頁面（純學術感謝） -->
-    <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-6">
-      <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-      </div>
-      
-      <div class="space-y-2">
+    <!-- 步驟 5：完成感謝與信箱登記頁面（無流水號，僅留 Email） -->
+    <section id="step-thanks" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6">
+      <div class="text-center space-y-3">
+        <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
         <h2 class="text-2xl font-bold text-slate-900">問卷填寫完成，感謝您的協助！</h2>
-        <p class="text-slate-600 max-w-md mx-auto text-sm md:text-base leading-relaxed">
-          感謝您撥冗完成本問卷，您的回答將作為本研究分析之重要資料。<br>
-          祝您投資順利、事事順心！
-        </p>
+        <p class="text-slate-600 text-sm max-w-md mx-auto">感謝您撥冗完成本問卷，您的回答將作為本研究分析之重要資料。</p>
       </div>
 
-      <div class="pt-4 border-t border-slate-100">
-        <p class="text-xs text-slate-400">完成時間：<span id="completeTimeText" class="font-mono text-slate-600"></span></p>
+      <!-- 聯絡信箱登記區 -->
+      <div id="rewardBox" class="bg-white border-2 border-teal-200 rounded-2xl p-5 md:p-6 space-y-4 shadow-xs">
+        <div class="border-b border-slate-100 pb-3">
+          <h4 class="font-bold text-slate-800 text-base md:text-lg flex items-center space-x-2">
+            <span>🎁 感謝禮發送聯絡資訊登記（選填）</span>
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">若願意參與後續感謝禮發送／抽獎，請留下您的 <strong>Email 信箱</strong> 方便聯絡（每組信箱限填一次，僅限有效問卷）：</p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">電子信箱（Email）</label>
+            <input type="email" id="rewardEmail" placeholder="例如：example@gmail.com" class="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none">
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button id="finalSubmitBtn" onclick="finalizeAndSubmit(true)" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl shadow-sm transition">
+              登記信箱並送出問卷
+            </button>
+            <button id="finalSkipBtn" onclick="finalizeAndSubmit(false)" class="py-3 px-5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold rounded-xl transition">
+              不留信箱，直接送出
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 送出成功提示（簡潔無流水號） -->
+      <div id="rewardSuccessMsg" class="hidden p-6 bg-teal-50 border-2 border-teal-300 rounded-2xl text-center space-y-2">
+        <div class="text-lg font-bold text-teal-800">🎉 問卷資料已成功送出！</div>
+        <p class="text-sm text-teal-700">非常感謝您的耐心填答與支持，祝您投資順利、平安順心！</p>
+        <p class="text-xs text-slate-500 pt-2">完成時間：<span id="completeTimeText" class="font-mono text-slate-700"></span></p>
       </div>
     </section>
 
@@ -559,7 +599,7 @@
 
       const nextBtn = document.getElementById('scaleNextBtn');
       if (currentScaleIdx === scaleSections.length - 1) {
-        nextBtn.innerText = "完成作答，確認送出問卷";
+        nextBtn.innerText = "完成作答，前往送出頁面";
       } else {
         nextBtn.innerText = "下一步";
       }
@@ -596,7 +636,7 @@
       });
     }
 
-    async function handleScaleNext() {
+    function handleScaleNext() {
       const sec = scaleSections[currentScaleIdx];
       for (let q of sec.questions) {
         const selected = document.querySelector(`input[name="${q.id}"]:checked`);
@@ -612,8 +652,8 @@
         renderScaleSection();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        // 最後一個區塊填寫完畢，正式送出
-        await finalizeAndSubmit();
+        goToStep('step-thanks');
+        updateProgress(95);
       }
     }
 
@@ -626,13 +666,29 @@
       }
     }
 
-    async function finalizeAndSubmit() {
-      const nextBtn = document.getElementById('scaleNextBtn');
-      nextBtn.disabled = true;
-      nextBtn.innerText = '資料傳送中...';
+    async function finalizeAndSubmit(withEmail) {
+      const emailInput = document.getElementById('rewardEmail').value.trim();
+      
+      if (withEmail) {
+        if (!emailInput) {
+          alert('若要登記感謝禮聯絡資訊，請輸入您的 Email 信箱；若不留信箱請點選「不留信箱，直接送出」。');
+          return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput)) {
+          alert('請輸入正確的 Email 信箱格式（例如：example@gmail.com）。');
+          return;
+        }
+      }
+
+      const submitBtn = document.getElementById('finalSubmitBtn');
+      const skipBtn = document.getElementById('finalSkipBtn');
+      submitBtn.disabled = true;
+      skipBtn.disabled = true;
+      submitBtn.innerText = '資料傳送中...';
 
       surveyAnswers.status = 'Completed';
-      surveyAnswers.Contact = '';
+      surveyAnswers.Contact = withEmail ? emailInput : '';
 
       // 取得真實外部 IP
       surveyAnswers.IP = await getClientIP();
@@ -648,7 +704,8 @@
       }
 
       document.getElementById('completeTimeText').innerText = new Date().toLocaleString('zh-TW');
-      goToStep('step-thanks');
+      document.getElementById('rewardBox').classList.add('hidden');
+      document.getElementById('rewardSuccessMsg').classList.remove('hidden');
       updateProgress(100);
     }
   </script>
